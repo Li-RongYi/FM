@@ -35,7 +35,7 @@ class Comment(models.Model):
     content = models.CharField(max_length=256)
     #comment_time = models.DateField(auto_now_add=True)
     comment_time = models.DateTimeField(auto_now_add=True)
-    rate = models.PositiveSmallIntegerField(default=5)
+    rate = models.PositiveSmallIntegerField(default=5,null=True)
 
 
     def __str__(self):
@@ -54,8 +54,8 @@ class InstationMessage(models.Model):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE)
+    goods = models.ForeignKey(Goods, blank=True, null=True, on_delete=models.CASCADE)
     num = models.PositiveIntegerField(default=1)
     sum = models.PositiveIntegerField(default=0)
 
