@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>用户注册</title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+        <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../static/css/form-elements.css">
+        <link rel="stylesheet" href="../static/css/style.css">
+
+
+        <!-- Favicon and touch icons -->
+        <link rel="shortcut icon" href="../static/ico/favicon.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../static/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../static/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../static/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="../static/ico/apple-touch-icon-57-precomposed.png">
+
+    </head>
+
+    <body>
+
+        <!-- Top content -->
+        <div class="top-content">
+
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2 text">
+                            <h1><strong>二手商品交易系统</strong></h1>
+                            <div class="description">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3 form-box">
+                        	<div class="form-top">
+                        		<div class="form-top-left">
+                        			<h3>账号注册</h3>
+                            		<p>请输入基本信息:</p>
+                        		</div>
+                        		<div class="form-top-right">
+                        			<i class="fa fa-key"></i>
+                        		</div>
+                            </div>
+                            <div class="form-bottom">
+               <form role="form" method="post" action="{% url 'register_info' %}">
+                                    {% if message %}
+                  <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+
+              {% csrf_token %}
+               <input type="hidden" name="email" value={{email}}>
+              <div class="form-group">
+                  账号:
+                  <input type="text" name="username" class="form-username form-control" id="username" readonly value={{username}}>
+              </div>
+               <div class="form-group">
+                  {{ register_form.nickname.label_tag }}
+                  {{ register_form.nickname }}
+              </div>
+              <div class="form-group">
+                  {{ register_form.password1.label_tag }}
+                  {{ register_form.password1 }}
+              </div>
+              <div class="form-group">
+                  {{ register_form.password2.label_tag }}
+                  {{ register_form.password2 }}
+              </div>
+              <div class="form-group">
+                  {{ register_form.gender.label_tag }}
+                  {{ register_form.gender }}
+              </div>
+               <div class="form-group">
+                  {{ register_form.image.label_tag }}
+                  {{ register_form.image }}
+              </div>
+               <div class="form-group">
+                  {{ register_form.avatar.label_tag }}
+                  {{ register_form.avatar }}
+              </div>
+
+              <button type="reset" class="btn">重置</button>
+              <button type="submit" class="btn">提交</button>
+
+          </form>
+     </div>
+
+        <!-- Javascript -->
+        <script>
+            document.getElementById("btn-email").onclick = function() {
+            document.getElementById("btn-state").value = 'email'
+        };
+        </script>
+        <script src="../static/js/jquery-1.11.1.min.js"></script>
+        <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../static/js/jquery.backstretch.min.js"></script>
+        <script src="../static/js/scripts.js"></script>
+
+    </body>
+
+</html>

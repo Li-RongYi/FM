@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+                <form action="{% url 'accountcancellation' %}" method="POST">
+                {% csrf_token %}
+               用户一旦注销，便无法登录，确定注销？<input type="checkbox" id="check" ></br>
+              <button type="submit" disabled=true id="btn" class="btn" >确认</button>
+                </form>
+            <script>
+            document.getElementById("check").onclick = function() {
+                if (document.getElementById("check").checked == true ){
+                    document.getElementById('btn').disabled = false;
+                }
+                else{
+                    document.getElementById('btn').disabled = true;
+                }
+        };
+        </script>
+{% endblock %}
