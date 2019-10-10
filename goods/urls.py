@@ -10,6 +10,12 @@ urlpatterns = [
     url(r'^cart/$', views.cart, name='cart'),
     url(r'^goods/(?P<goods_id>[\w\-]+)', views.goods_page, name='goods'),
     url(r'^add_comment/(?P<goods_id>[\w\-]+)', views.add_comment, name='add_comment'),
+    url(r'^add_cart/(?P<goods_id>[\w\-]+)', views.add_cart, name='add_cart'),
+
+    url(r'^clear_cart', views.clear_cart, name='clear_cart'),
+    url(r'^delete_cart', views.delete_cart, name='delete_cart'),
+    # url(r'^add_cart/(?P<goods_id>[\w\-]+)', views.add_cart, name='add_cart'),
+    # url(r'^add_cart/(?P<goods_id>[\w\-]+)', views.add_cart, name='add_cart'),
     # url(r'^category/(?P<category_id>[\w\-]+)', views.category, name='category'),
     # url(r'^add_goods', views.add_goods, name='add_goods'),
     # url(r'^profile/(?P<user_id>[\w\-]+)', views.profile, name='profile'),

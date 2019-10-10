@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Category, Goods, Comment, InstationMessage,Cart
+from .models import Category, Goods, Comment, InstationMessage, Cart
 from user.models import UserProfile
 from .forms import *
 
@@ -63,7 +63,41 @@ def add_comment(request, goods_id):
 @login_required
 def cart(request):
     user_profile = UserProfile.objects.get(user=request.user)
-    if request.POST == 'POST':
-        carts = Cart.objects.filter(user=request.user)
-        return render(request, 'cart.html',{'user_profile':user_profile,'carts':carts})
-    return render(request, 'cart.html',{'user_profile':user_profile})
+    carts = Cart.objects.filter(user=user_profile)
+    return render(request, 'cart.html',{'user_profile':user_profile,'carts':carts})
+
+@login_required
+def add_cart(request, goods_id):
+    if request.method == 'POST':
+        cart = Cart.objects.create()
+        cart.user = UserProfile.objects.get(user=request.user)
+        goods = Goods.objects.get(pk=goods_id)
+        cart.goods = goods
+        num = int(request.POST.get("quantity_input",1))
+        cart.num =num
+        cart.sum =num*goods.price
+        cart.save()
+
+        return goods_page(request, goods_id)
+
+@login_required
+def clear_cart(request):
+    if request.method == 'POST':
+        user_profile = UserProfile.objects.get(user=request.user)
+        Cart.objects.filter(user=user_profile).delete()
+        return render(request, 'cart.html', {'user_profile': user_profile})
+
+
+@login_required
+def delete_cart(request):
+    if request.method == 'POST':
+        id = request.POST.get('cart_id',None)
+        print(id)
+        if id is not None:
+            Cart.objects.get(id=id).delete()
+        user_profile = UserProfile.objects.get(user=request.user)
+        carts = Cart.objects.filter(user=user_profile)
+        return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts})
+
+
+

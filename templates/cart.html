@@ -57,35 +57,40 @@
 				<div class="col">
 					<div class="cart_products">
 						<ul>
-							<li class=" cart_product d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
+							<br class=" cart_product d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
+                                {% if carts %}
                                 {% for cart in carts %}
-								<!-- Product Image -->
-								<div class="cart_product_image"><img src="{{ cart.goods.picture_url }}" alt=""></div>
-								<!-- Product Name -->
+                                 <!-- Product Image -->
+								 <div class="cart_product_image"><img src="{{ cart.goods.picture.url }}" height="100px" width="100px" alt="{{ cart.goods.name }}"></div>
+                                  <!-- Product Name -->
 								<div class="cart_product_name"><a href="product.html">{{ cart.goods.name }}</a></div>
 								<div class="cart_product_info ml-auto">
 									<div class="cart_product_info_inner d-flex flex-row align-items-center justify-content-md-end justify-content-start">
 										<!-- Product Price -->
-										<div class="cart_product_price">$35.00</div>
+										<div class="cart_product_price">￥{{ cart.goods.price }}</div>
 										<!-- Product Quantity -->
 										<div class="product_quantity_container">
 											<div class="product_quantity clearfix">
-												<input id="quantity_input" type="text" pattern="[0-9]*" value={{ cart.num }}>
-												<div class="quantity_buttons">
-													<div id="quantity_inc_button" class="quantity_inc quantity_control"><i class="fa fa-caret-up" aria-hidden="true"></i></div>
-													<div id="quantity_dec_button" class="quantity_dec quantity_control"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
-												</div>
+												<input id="quantity_input" type="text" pattern="[1-9][0-9]*" value={{ cart.num }} readonly=true>
 											</div>
 										</div>
 										<!-- Products Total Price -->
-										<div class="cart_product_total">$35.00</div>
+										<div class="cart_product_total">￥{{ cart.sum }}</div>
 										<!-- Product Cart Trash Button -->
+                                         <form action="{% url 'delete_cart' %}" method="post">
+                                        {% csrf_token %}
+                                             <input name="cart_id" type="hidden" value={{ cart.id }}>
 										<div class="cart_product_button">
 											<button class="cart_product_remove"><img src="../static/images/trash.png" alt=""></button>
 										</div>
+                                         </form>
 									</div>
 								</div>
+                                    </br>
                                 {% endfor %}
+                                {% else %}
+                                    There is nothing in the cart!!
+                                {% endif %}
 							</li>
 						</ul>
 					</div>
@@ -94,9 +99,12 @@
 			<div class="row">
 				<div class="col">
 					<div class="cart_control_bar d-flex flex-md-row flex-column align-items-start justify-content-start">
+                        <form action="{% url 'clear_cart' %}" method="post">
+                            {% csrf_token %}
 						<button class="button_clear cart_button">clear cart</button>
-						<button class="button_update cart_button">update cart</button>
-						<button class="button_update cart_button_2 ml-md-auto">continue shopping</button>
+                        </form>
+						<button class="button_update cart_button"><a href="{% url 'cart' %}">update cart</button></button>
+						<button class="button_update cart_button_2 ml-md-auto"><a href="{% url 'index' %}">continue shopping</button>
 					</div>
 				</div>
 			</div>

@@ -92,10 +92,12 @@
                             卖家: <span class="value-name">{{ goods.seller }}</span>
                         </div>
 						<!-- Product Quantity -->
+                       <form action="{% url 'add_cart' goods.pk %}" method="post">
+                            {% csrf_token %}
 						<div class="product_quantity_container">
 							<span>Quantity</span>
 							<div class="product_quantity clearfix">
-								<input id="quantity_input" type="text" pattern="[0-9]*" value="1">
+								<input id="quantity_input" name='quantity_input' type="text" pattern="[1-9][0-9]*" value="1">
 								<div class="quantity_buttons">
 									<div id="quantity_inc_button" class="quantity_inc quantity_control"><i class="fa fa-caret-up" aria-hidden="true"></i></div>
 									<div id="quantity_dec_button" class="quantity_dec quantity_control"><i class="fa fa-caret-down" aria-hidden="true"></i></div>
@@ -103,7 +105,8 @@
 							</div>
 						</div>
 
-                        <div class="button cart_button"><a href="#">add to cart</a></div>
+                        <button type="submit" class="review_form_button">add to cart</button>
+                     </form>
 					</div>
 				</div>
 			</div>
@@ -117,6 +120,7 @@
 						<div class="reviews_container">
 							<ul>
 								<!-- Review -->
+                                {% if comments %}
                                  {% for comment in comments %}
 								<li class=" review clearfix">
 									<div class="review_image"><img src="{{ comment.user.avatar.url }}" alt=""></div>
@@ -136,6 +140,9 @@
 									</div>
 								</li>
                                 {% endfor %}
+                            {% else %}
+                                No one comment yet!!
+                            {% endif %}
 							</ul>
 						</div>
 					</div>
