@@ -64,7 +64,7 @@
 						</div>
 					</a>
 					<!-- Avatar -->
-					<a href="#">
+					<a href="{% url 'mygoods' %}">
 						<div class="avatar">
 							<img src="../static/images/avatar.svg" alt="Avatar">
 						</div>
@@ -80,7 +80,9 @@
 
 	<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
 		<div class="menu_close_container"><div class="menu_close"><div></div><div></div></div></div>
+        {% if user_profile.avatar %}
         <div class="img"><img src="{{ user_profile.avatar.url }}" height="100px" width="100px"></div>
+        {% endif %}
 		<div class="logo menu_mm"><a href="#">{{ user_profile.nickname }}</a></div>
 		<div class="search">
 			<form action="#">

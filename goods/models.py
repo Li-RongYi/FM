@@ -16,13 +16,11 @@ class Goods(models.Model):
     description = models.CharField(max_length=512, blank=True)
     trade_location = models.CharField(max_length=32)
     price = models.FloatField(default=0)
+    quantity = models.PositiveIntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    picture_url = models.CharField(max_length=128, blank=True)
     picture = models.ImageField(upload_to='goods', blank=True, null=True)
     seller = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE)
-    discount = models.IntegerField(default=0, blank=True)
-    goods_phone = models.CharField(max_length=20,null=True)
-    goods_qq = models.CharField(max_length=15,null=True)
+    contact = models.CharField(max_length=20,null=True)
     publish_time = models.DateField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
@@ -33,7 +31,6 @@ class Comment(models.Model):
     goods = models.ForeignKey(Goods, blank=True, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE)
     content = models.CharField(max_length=256)
-    #comment_time = models.DateField(auto_now_add=True)
     comment_time = models.DateTimeField(auto_now_add=True)
     rate = models.PositiveSmallIntegerField(default=5,null=True)
 

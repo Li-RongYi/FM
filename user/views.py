@@ -183,7 +183,7 @@ def passwordchange(request):
                     user = User.objects.get(username=request.user)
                     user.set_password(password)
                     user.save()
-                    return render(request, 'passwordchange.html', {'user_profile':user_profile,'message': '修改成功'})
+                    return render(request, 'login.html', {'user_profile':user_profile,'message': '修改成功'})
                 else:
                     return render(request, 'passwordchange.html', {'user_profile':user_profile,'message': '验证码错误'})
     return render(request,'passwordchange.html',{'user_profile':user_profile})

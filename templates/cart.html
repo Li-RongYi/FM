@@ -61,7 +61,9 @@
                                 {% if carts %}
                                 {% for cart in carts %}
                                  <!-- Product Image -->
+                                    {% if cart.goods.picture %}
 								 <div class="cart_product_image"><img src="{{ cart.goods.picture.url }}" height="100px" width="100px" alt="{{ cart.goods.name }}"></div>
+                                    {% endif %}
                                   <!-- Product Name -->
 								<div class="cart_product_name"><a href="product.html">{{ cart.goods.name }}</a></div>
 								<div class="cart_product_info ml-auto">
@@ -77,13 +79,9 @@
 										<!-- Products Total Price -->
 										<div class="cart_product_total">￥{{ cart.sum }}</div>
 										<!-- Product Cart Trash Button -->
-                                         <form action="{% url 'delete_cart' %}" method="post">
-                                        {% csrf_token %}
-                                             <input name="cart_id" type="hidden" value={{ cart.id }}>
-										<div class="cart_product_button">
-											<button class="cart_product_remove"><img src="../static/images/trash.png" alt=""></button>
+                                        <div class="cart_product_button">
+                                            <button class="cart_product_remove"><a href="{% url 'delete_cart'  cart.id %}"><img src="../static/images/trash.png" alt=""></a></button>
 										</div>
-                                         </form>
 									</div>
 								</div>
                                     </br>
@@ -103,8 +101,8 @@
                             {% csrf_token %}
 						<button class="button_clear cart_button">clear cart</button>
                         </form>
-						<button class="button_update cart_button"><a href="{% url 'cart' %}">update cart</button></button>
-						<button class="button_update cart_button_2 ml-md-auto"><a href="{% url 'index' %}">continue shopping</button>
+						<a href="{% url 'cart' %}"><button class="button_update cart_button">update cart</button></a>
+                        <button class="button_update cart_button_2 ml-md-auto"><a href="{% url 'index' %}">continue shopping</a></button>
 					</div>
 				</div>
 			</div>

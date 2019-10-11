@@ -52,7 +52,10 @@
 				<!-- Product Image -->
 				<div class="col-lg-7">
 					<div class="product_image">
-						<div class="product_image_large"><img src="{{ goods.picture.url }}" alt={{ goods.name }} height="250px" width="250px"></div>
+                        {% if  goods.picture %}
+                        <div class="product_image_large"><img src="{{ goods.picture.url }}" alt={{ goods.name }} height="250px" width="250px"></div>
+                        {% endif %}
+
 						<!--<div class="product_image_thumbnails d-flex flex-row align-items-start justify-content-start">
 							<div class="product_image_thumbnail" style="background-image:url(images/product_image_1.jpg)" data-image="images/product_image_1.jpg"></div>
 							<div class="product_image_thumbnail" style="background-image:url(images/product_image_2.jpg)" data-image="images/product_image_2.jpg"></div>
@@ -123,7 +126,9 @@
                                 {% if comments %}
                                  {% for comment in comments %}
 								<li class=" review clearfix">
+                                {% if comment.user.avatar %}
 									<div class="review_image"><img src="{{ comment.user.avatar.url }}" alt=""></div>
+                                {% endif %}
 									<div class="review_content">
 										<div class="review_name"><a href="#">{{ comment.user.nickname }}</a></div>
 										<div class="review_date">{{ comment.comment_time }}</div>

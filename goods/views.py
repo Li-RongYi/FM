@@ -89,15 +89,70 @@ def clear_cart(request):
 
 
 @login_required
-def delete_cart(request):
-    if request.method == 'POST':
-        id = request.POST.get('cart_id',None)
-        print(id)
-        if id is not None:
-            Cart.objects.get(id=id).delete()
+def delete_cart(request,cart_id):
+    if request.method == 'GET':
+        if cart_id is not None:
+            Cart.objects.filter(id=cart_id).delete()
         user_profile = UserProfile.objects.get(user=request.user)
         carts = Cart.objects.filter(user=user_profile)
         return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts})
+
+
+@login_required
+def mygoods(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    goods = Goods.objects.filter(seller=user_profile).reverse()
+    return render(request, 'mygoods.html', {'user_profile': user_profile, 'goods': goods})
+
+
+@login_required
+def publish_goods(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    if request.method == 'POST':
+        goods_form = GoodsForm(request.POST)
+        if goods_form.is_valid():
+            goods = goods_form.save(commit=True)
+            goods.seller = user_profile
+            print(goods.picture)
+            if 'picture' in request.FILES:
+                goods.picture = request.FILES['picture']
+            goods.save()
+            goods = Goods.objects.filter(seller=user_profile).reverse()
+            return render(request, 'mygoods.html', {'user_profile': user_profile, 'goods': goods})
+        else:
+            print(goods_form.errors)
+    goods_form = GoodsForm()
+    return render(request, 'publish_goods.html', {'user_profile': user_profile,'form': goods_form})
+
+@login_required
+def edit_goods(request,goods_id):
+    user_profile = UserProfile.objects.get(user=request.user)
+    if request.method == 'POST':
+        goods_form = GoodsForm(request.POST)
+        if goods_form.is_valid():
+            goods = Goods.objects.get(id=goods_id)
+            goods.__dict__.update(**goods_form.cleaned_data)
+            print(request.POST)
+            if 'picture' in request.FILES:
+                goods.picture = request.FILES['picture']
+            else:
+                goods.picture = request.POST['default_picture']
+            goods.save()
+            goods = Goods.objects.filter(seller=user_profile).reverse()
+            return render(request, 'mygoods.html', {'user_profile': user_profile, 'goods': goods})
+    else:
+        goods = Goods.objects.get(id=goods_id)
+        goods_form = GoodsForm(instance=goods)
+        return render(request, 'edit_goods.html', {'user_profile': user_profile,'form': goods_form,'goods': goods})
+
+@login_required
+def delete_goods(request,goods_id):
+    if request.method == 'GET':
+        if goods_id is not None:
+            Goods.objects.filter(id=goods_id).delete()
+        user_profile = UserProfile.objects.get(user=request.user)
+        goods = Goods.objects.filter(seller=user_profile).reverse()
+        return render(request, 'mygoods.html', {'user_profile': user_profile, 'goods': goods})
 
 
 
