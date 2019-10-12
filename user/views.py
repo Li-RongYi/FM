@@ -9,7 +9,6 @@ from random import randint
 from FM.settings import EMAIL_FROM
 from django.contrib.auth.decorators import login_required
 import base64
-import face_regonition
 
 
 def authenticate(username=None, password=None):
@@ -154,8 +153,6 @@ def login_face(request):
         photo = request.POST.get('hidden_photo',None)
         if photo is not None:
             img = base64.b64decode(photo.split(',')[-1])
-
-            unkown_face = face_recogi
     return render(request, 'login_face.html')
 
 
