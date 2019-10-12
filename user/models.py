@@ -22,6 +22,7 @@ class UserProfile(models.Model):
     height = models.PositiveIntegerField(default="30", blank=True, null=True, editable=False)
     width = models.PositiveIntegerField(default="30", blank=True, null=True, editable=False)
     avatar = models.ImageField(upload_to='profile', height_field='height', width_field='width')
+    contact = models.CharField(max_length=20,null=True)
 
     def __str__(self):
         return self.user.username

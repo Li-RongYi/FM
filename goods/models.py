@@ -53,8 +53,21 @@ class InstationMessage(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE)
     goods = models.ForeignKey(Goods, blank=True, null=True, on_delete=models.CASCADE)
+    price = models.FloatField(default=0)
     num = models.PositiveIntegerField(default=1)
-    sum = models.PositiveIntegerField(default=0)
+    sum = models.FloatField(default=0)
 
     def __str__(self):
         return self.sum
+    
+class Order(models.Model):
+    seller = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE,related_name='seller')
+    buyer = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE,related_name='buyer')
+    goods = models.ForeignKey(Goods, blank=True, null=True, on_delete=models.CASCADE)
+    num = models.PositiveIntegerField(default=1)
+    sum = models.FloatField(default=0)
+    contact = models.CharField(max_length=20,null=True)
+    message = models.CharField(max_length=512, blank=True)
+
+    def __str__(self):
+        return self.message

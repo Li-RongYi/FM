@@ -107,8 +107,11 @@
 								</div>
 							</div>
 						</div>
-
-                        <button type="submit" class="review_form_button">add to cart</button>
+                        {% if goods.seller.id == user_profile.id %}
+                            <button type="submit" class="review_form_button" disabled="true">add to cart</button>
+                        {% else %}
+                           <button type="submit" class="review_form_button">add to cart</button>
+                         {% endif %}
                      </form>
 					</div>
 				</div>
@@ -172,7 +175,6 @@
 			</div>
 		</div>		
 	</div>
-
 
 <script src="../static/js/jquery-3.2.1.min.js"></script>
 <script src="../static/styles/bootstrap4/popper.js"></script>

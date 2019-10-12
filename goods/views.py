@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Category, Goods, Comment, InstationMessage, Cart
+from .models import Category, Goods, Comment, InstationMessage, Cart, Order
 from user.models import UserProfile
 from .forms import *
-
 
 
 # Create your views here.
@@ -60,11 +59,13 @@ def add_comment(request, goods_id):
         else:
             print(comment_form.errors)
 
+
 @login_required
 def cart(request):
     user_profile = UserProfile.objects.get(user=request.user)
     carts = Cart.objects.filter(user=user_profile)
-    return render(request, 'cart.html',{'user_profile':user_profile,'carts':carts})
+    return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts})
+
 
 @login_required
 def add_cart(request, goods_id):
@@ -73,12 +74,14 @@ def add_cart(request, goods_id):
         cart.user = UserProfile.objects.get(user=request.user)
         goods = Goods.objects.get(pk=goods_id)
         cart.goods = goods
-        num = int(request.POST.get("quantity_input",1))
-        cart.num =num
-        cart.sum =num*goods.price
+        cart.price = goods.price
+        num = int(request.POST.get("quantity_input", 1))
+        cart.num = num
+        cart.sum = num * cart.price
         cart.save()
 
         return goods_page(request, goods_id)
+
 
 @login_required
 def clear_cart(request):
@@ -89,7 +92,7 @@ def clear_cart(request):
 
 
 @login_required
-def delete_cart(request,cart_id):
+def delete_cart(request, cart_id):
     if request.method == 'GET':
         if cart_id is not None:
             Cart.objects.filter(id=cart_id).delete()
@@ -122,10 +125,11 @@ def publish_goods(request):
         else:
             print(goods_form.errors)
     goods_form = GoodsForm()
-    return render(request, 'publish_goods.html', {'user_profile': user_profile,'form': goods_form})
+    return render(request, 'publish_goods.html', {'user_profile': user_profile, 'form': goods_form})
+
 
 @login_required
-def edit_goods(request,goods_id):
+def edit_goods(request, goods_id):
     user_profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
         goods_form = GoodsForm(request.POST)
@@ -143,10 +147,11 @@ def edit_goods(request,goods_id):
     else:
         goods = Goods.objects.get(id=goods_id)
         goods_form = GoodsForm(instance=goods)
-        return render(request, 'edit_goods.html', {'user_profile': user_profile,'form': goods_form,'goods': goods})
+        return render(request, 'edit_goods.html', {'user_profile': user_profile, 'form': goods_form, 'goods': goods})
+
 
 @login_required
-def delete_goods(request,goods_id):
+def delete_goods(request, goods_id):
     if request.method == 'GET':
         if goods_id is not None:
             Goods.objects.filter(id=goods_id).delete()
@@ -155,4 +160,33 @@ def delete_goods(request,goods_id):
         return render(request, 'mygoods.html', {'user_profile': user_profile, 'goods': goods})
 
 
+@login_required
+def checkout(request, cart_id):
+    user_profile = UserProfile.objects.get(user=request.user)
+    cart = Cart.objects.get(id=cart_id)
+    if request.method == 'POST':
+        order = Order.objects.create()
+        cart = Cart.objects.get(id=cart_id)
+        order.seller = cart.user
+        order.buyer = user_profile
+        order.goods = cart.goods
+        order.num = cart.num
+        order.sum = cart.sum
+        order.contact = request.POST['contact']
+        order.message = request.POST['message']
+        order.save()
+        Cart.objects.filter(id=cart_id).delete()
+        return render(request, 'myorder.html',{'user_profile': user_profile})
+    return render(request, 'checkout.html', {'user_profile': user_profile, 'cart': cart})
 
+@login_required
+def myorder(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    orders = Order.objects.filter(buyer=user_profile).reverse()
+    return render(request, 'myorder.html', {'user_profile': user_profile, 'orders': orders})
+
+@login_required
+def mysale(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    orders = Order.objects.filter(seller=user_profile).reverse()
+    return render(request, 'mysale.html', {'user_profile': user_profile, 'orders': orders})
