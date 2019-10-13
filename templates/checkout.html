@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Wish shop project">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="../static/styles/bootstrap4/bootstrap.min.css">
+<link href="../static/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../static/styles/checkout.css">
+<link rel="stylesheet" type="text/css" href="../static/styles/checkout_responsive.css">
+
+
+<body>
+
+	<!-- Home -->
+    <div class="home_container">
+		<div class="parallax-window home_background" data-parallax="scroll" data-image-src="../static/images/checkout.jpg" data-speed="0.8"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="home_container">
+						<div class="home_content">
+							<div class="home_title">Checkout</div>
+							<div class="breadcrumbs">
+								<ul>
+									<li><a href={% url 'index' %}>Home</a></li>
+									<li><a href={% url 'cart' %}>Shopping Cart</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+
+	<!-- Checkout -->
+
+	<div class="checkout">
+		<div class="container">
+			<div class="row">
+
+				<!-- Billing Details -->
+				<div class="col-lg-6">
+					<div class="billing">
+						<div class="checkout_title">billing details</div>
+						<div class="checkout_form_container">
+                            <form action="{% url 'checkout' cart.id %}" id="checkout_form" method="post">
+                                {% csrf_token %}
+                                <input type="text" name="contact" maxlength="20" class="checkout_input" placeholder="Contact" required="required" value="{{ user_profile.contact|default_if_none:'' }}">
+								<textarea name="message" id="message" class="checkout_comment" placeholder="Leave a message about your order"></textarea>
+                                <button class="cart_total_button">place order</button>
+                            </form>
+						</div>
+					</div>
+				</div>
+				<!-- Cart Details -->
+				<div class="col-lg-6">
+					<div class="cart_details">
+						<div class="checkout_title">cart total</div>
+						<div class="cart_total">
+							<ul>
+								<li class="d-flex flex-row align-items-center justify-content-start">
+									<div class="cart_total_title">Product</div>
+									<div class="cart_total_price ml-auto">{{ cart.goods.name }}</div>
+								</li>
+								<li class="d-flex flex-row align-items-center justify-content-start">
+									<div class="cart_total_title">Price</div>
+									<div class="cart_total_price ml-auto">{{ cart.price }}</div>
+								</li>
+								<li class="d-flex flex-row align-items-center justify-content-start">
+									<div class="cart_total_title">Qunatity</div>
+									<div class="cart_total_price ml-auto">{{ cart.num }}</div>
+								</li>
+						<!--		<li class="d-flex flex-row align-items-center justify-content-start">
+									<div class="cart_total_title">Shipping</div>
+									<div class="cart_total_price ml-auto">$5.00</div>
+								</li> -->
+								<li class="d-flex flex-row align-items-start justify-content-start total_row">
+									<div class="cart_total_title">Total</div>
+									<div class="cart_total_price ml-auto">{{ cart.sum }}</div>
+								</li>
+							</ul>
+						</div>
+				<!--		<div class="payment_options">
+							<div>
+								<input type="radio" id="radio_payment_1" name="regular_radio" class="regular_radio">
+								<label for="radio_payment_1">cash on delivery</label>
+							</div>
+							<div>
+								<input type="radio" id="radio_payment_2" name="regular_radio" class="regular_radio" checked>
+								<label for="radio_payment_2">paypal</label>
+								<div class="visa payment_option"><a href="#"><img src="../static/images/visa.jpg" alt=""></a></div>
+								<div class="master payment_option"><a href="#"><img src="../static/images/master.jpg" alt=""></a></div>
+							</div>
+
+						</div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/styles/bootstrap4/popper.js"></script>
+<script src="../static/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="../static/plugins/easing/easing.js"></script>
+<script src="../static/plugins/parallax-js-master/parallax.min.js"></script>
+<script src="../static/js/checkout_custom.js"></script>
+</body>
+
+{% endblock %}
