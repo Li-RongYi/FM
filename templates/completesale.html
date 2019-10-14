@@ -1,0 +1,127 @@
+{% extends 'base_goods.html' %}
+
+{% block content %}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Wish shop project">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="../static/styles/bootstrap4/bootstrap.min.css">
+<link href="../static/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../static/styles/cart.css">
+<link rel="stylesheet" type="text/css" href="../static/styles/cart_responsive.css">
+	<!-- Home -->
+    <div class="home_container">
+		<div class="parallax-window home_background " data-parallax="scroll" data-image-src="../static/images/goods.jpg" data-speed="0.8"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="home_container">
+						<div class="home_content">
+							<div class="home_title">Complete Sale</div>
+							<div class="breadcrumbs">
+								<ul>
+									<li><a href={% url 'index' %}>Home</a></li>
+									<li>Complete Sale</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+	<!-- Cart -->
+	<div class="cart_container">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="cart_title"><a href="{% url 'mysale' %}">My Sale</a> / Complete Sale</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<div class="cart_bar d-flex flex-row align-items-center justify-content-start">
+						<div class="cart_bar_title_name">Product</div>
+						<div class="cart_bar_title_content ml-auto">
+							<div class="cart_bar_title_content_inner d-flex flex-row align-items-center justify-content-end">
+								<div class="cart_bar_title_price">Buyer</div>
+								<div class="cart_bar_title_quantity">Quantity</div>
+								<div class="cart_bar_title_total">Total</div>
+								<div class="cart_bar_title_button"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<div class="cart_products">
+                        {% if orders %}
+                            {% for order in orders %}
+                    <ul>
+							<br class=" cart_product d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
+                        <!-- Product Image -->
+                        {% if order.goods.picture %}
+                            <div class="cart_product_image"><img src="{{ order.goods.picture.url }}" height="100px" width="100px" alt="{{ order.goods.name }}"></div>
+                        {% endif %}
+                                  <!-- Product Name -->
+								<div class="cart_product_name"><a href="product.html">{{ order.goods.name }}</a></div>
+								<div class="cart_product_info  ml-auto">
+									<div class="cart_product_info_inner d-flex flex-row align-items-center justify-content-md-end justify-content-start">
+										<!-- Product Price -->
+										<div class="cart_product_price">{{ order.buyer.nickname }}</div>
+										<!-- Product Quantity -->
+										<div class="product_quantity_container">
+											<div class="product_quantity clearfix">
+												<input id="quantity_input" type="text" pattern="[1-9][0-9]*" value={{ order.num }} readonly=true>
+											</div>
+										</div>
+										<!-- Products Total Price -->
+										<div class="cart_product_total">￥{{ order.sum }}</div>
+										<!-- Product Cart Trash Button -->
+
+									</div>
+								</div>
+
+							</li>
+						</ul>
+                            {% endfor %}
+                                {% else %}
+                                    you haven't had completed any sales yet!!
+                                {% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<div class="cart_control_bar d-flex flex-md-row flex-column align-items-start justify-content-start">
+						<a href="{% url 'mygoods' %}"><button class="button_clear cart_button">my goods</button></a>
+                        <a href="{% url 'completesale' %}"><button class="button_update cart_button">update</button></a>
+                        <button class="button_update cart_button_2 ml-md-auto"><a href="{% url 'index' %}">continue shopping</a></button>
+					</div>
+				</div>
+			</div>
+			<div class="row cart_extra">
+				<!-- Cart Coupon -->
+<!--				<div class="col-lg-6">
+					<div class="cart_coupon">
+						<div class="cart_title">coupon code</div>
+						<form action="#" class="cart_coupon_form d-flex flex-row align-items-start justify-content-start" id="cart_coupon_form">
+							<input type="text" class="cart_coupon_input" placeholder="Coupon code" required="required">
+							<button class="button_clear cart_button_2">apply coupon</button>
+						</form>
+					</div>
+				</div>    -->
+			</div>
+		</div>
+	</div>
+
+
+
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/styles/bootstrap4/popper.js"></script>
+<script src="../static/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="../static/plugins/easing/easing.js"></script>
+<script src="../static/plugins/parallax-js-master/parallax.min.js"></script>
+<script src="../static/js/cart_custom.js"></script>
+{% endblock %}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>二手商品交易系统</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Wish shop project">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="../static/styles/bootstrap4/bootstrap.min.css">
+<link href="../static/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="../static/plugins/OwlCarousel2-2.2.1/animate.css">
+<link href="../static/plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../static/styles/main_styles.css">
+<link rel="stylesheet" type="text/css" href="../static/styles/responsive.css">
+</head>
+<body>
+
+<div class="super_container">
+
+	<!-- Header -->
+
+	<header class="header">
+		<div class="header_inner d-flex flex-row align-items-center justify-content-start">
+			<div class="logo"><a href="#">FleaMarket</a></div>
+			<nav class="main_nav">
+				<ul>
+					<li><a href={% url 'index' %}>Home</a></li>
+					<li><a href="{% url 'mygoods' %}">My Goods</a></li>
+                    <li><a href="{% url 'mysale' %}">My Sale</a></li>
+                    <li><a href="{% url 'publish_goods' %}">Publish goods</a></li>
+				</ul>
+			</nav>
+			<div class="header_content ml-auto">
+				<div class="search header_search">
+					<form action="{% url 'index' %}" method="post">
+                        {% csrf_token %}
+						<input type="search" class="search_input" required="required" id="search" name="search">
+						<button type="submit" id="search_button" class="search_button"><img src="../static/images/magnifying-glass.svg" alt=""></button>
+					</form>
+				</div>
+				<div class="shopping">
+					<!-- Cart -->
+					<a href="{% url 'cart' %}">
+						<div class="cart">
+							<img src="../static/images/shopping-bag.svg" alt="Cart">
+							<div class="cart_num_container">
+								<div class="cart_num_inner">
+									<div class="cart_num">1</div>
+								</div>
+							</div>
+						</div>
+					</a>
+					<!-- Star -->
+					<a href="{% url 'myorder' %}">
+						<div class="star">
+							<img src="../static/images/star.svg" alt="Star">
+							<div class="star_num_container">
+								<div class="star_num_inner">
+									<div class="star_num">0</div>
+								</div>
+							</div>
+						</div>
+					</a>
+					<!-- Avatar -->
+					<a href="{% url 'mygoods' %}">
+						<div class="avatar">
+							<img src="../static/images/avatar.svg" alt="Avatar">
+						</div>
+					</a>
+
+         <!--           <a href="{% url 'mygoods' %}">
+						<div class="avatar">
+							<img src="../static/images/email.svg" alt="email">
+						</div>
+					</a> -->
+				</div>
+			</div>
+
+			<div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+		</div>
+	</header>
+
+	<!-- Menu -->
+
+	<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+		<div class="menu_close_container"><div class="menu_close"><div></div><div></div></div></div>
+        {% if user_profile.avatar %}
+        <div class="img"><img src="{{ user_profile.avatar.url }}" height="100px" width="100px"></div>
+        {% endif %}
+		<div class="logo menu_mm"><a href="#">{{ user_profile.nickname }}</a></div>
+	<!--	<div class="search">
+			<form action="#">
+				<input type="search" class="search_input menu_mm" required="required">
+				<button type="submit" id="search_button_menu" class="search_button menu_mm"><img class="menu_mm" src="../static/images/magnifying-glass.svg" alt=""></button>
+			</form>
+		</div> -->
+		<nav class="menu_nav">
+			<ul class="menu_mm">
+				<li class="menu_mm"><a href={% url 'profilechange' %}>信息修改</a></li>
+                <li class="menu_mm"><a href={% url 'passwordchange' %}>密码修改</a></li>
+				<li class="menu_mm"><a href={% url 'accountcancellation' %}>账号注销</a></li>
+                <li class="menu_mm"><a href={% url 'logout' %}>更换账号</a></li>
+			</ul>
+		</nav>
+	</div>
+<br><br><br><br><br><br>
+    {% block content %}
+    {% endblock %}
+	<!-- Footer -->
+
+	<footer class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col text-center">
+
+					<div class="copyright">
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Rongyi Li, Yingfei Li and Ying Chen 's assignments <i class="fa fa-heart-o" aria-hidden="true"></i></a>
+</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/styles/bootstrap4/popper.js"></script>
+<script src="../static/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="../static/plugins/easing/easing.js"></script>
+<script src="../static/plugins/parallax-js-master/parallax.min.js"></script>
+<script src="../static/js/custom.js"></script>
+</body>
+</html>
