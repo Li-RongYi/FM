@@ -728,6 +728,7 @@ section
 	margin-top: 64px;
 }
 .cart_bar_title_name,
+.cart_bar_title_description,
 .cart_bar_title_price,
 .cart_bar_title_quantity,
 .cart_bar_title_total
@@ -747,6 +748,11 @@ section
 .cart_bar_title_content_inner
 {
 	width: 100%;
+}
+.cart_bar_title_description
+{
+	width: 35%;
+	text-align: center;
 }
 .cart_bar_title_price
 {
@@ -783,12 +789,18 @@ section
 	width: 100%;
 }
 .cart_product_name a,
+.cart_product_description,
 .cart_product_price,
 .cart_product_total
 {
 	font-size: 18px;
 	font-weight: 600;
 	color: #232323;
+}
+.cart_product_description
+{
+	width: 35%;
+	text-align: center;
 }
 .cart_product_price
 {
