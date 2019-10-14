@@ -4,25 +4,39 @@ from django.contrib.auth.decorators import login_required
 from .models import Category, Goods, Comment, InstationMessage, Cart, Order
 from user.models import UserProfile
 from .forms import *
+from django.db.models import Q
 
 
 # Create your views here.
 
 @login_required
 def index(request):
-    # if request.user.is_authenticated:
+    if request.method == 'POST':
+        content = request.POST.get('search', '')
+        user_profile = UserProfile.objects.get(user=request.user)
+        goods_list = Goods.objects.filter(
+            Q(name__icontains=content) | Q(trade_location__icontains=content)).order_by('-publish_time')
+        context_dic = {'user_profile': user_profile, 'goods': goods_list, 'message': content}
+        return render(request, 'index.html', context_dic)
+    else:
+        user_profile = UserProfile.objects.get(user=request.user)
+        goods_list = Goods.objects.all().order_by('-publish_time')
+        context_dic = {'user_profile': user_profile, 'goods': goods_list}
+        return render(request, 'index.html', context_dic)
+
+
+@login_required
+def index_category(request, category_id):
     user_profile = UserProfile.objects.get(user=request.user)
-    message_unread = InstationMessage.objects.filter(receiver=user_profile, active=True).count()
-    category_list = Category.objects.all()
-    goods_list = Goods.objects.all().order_by('-publish_time')
-    context_dic = {'categories': category_list, 'user_profile': user_profile, 'goods': goods_list,
-                   'message_unread': message_unread}
+    category = Category.objects.get(id=category_id)
+    goods_list = Goods.objects.filter(category=category).order_by('-publish_time')
+    context_dic = {'user_profile': user_profile, 'goods': goods_list}
     return render(request, 'index.html', context_dic)
 
 
 @login_required
 def about(request):
-    return HttpResponse("This is about page.")
+    return HttpResponse("Rongyi Li, Yingfei Li and Ying Chen 's assignments")
 
 
 @login_required
@@ -62,9 +76,15 @@ def add_comment(request, goods_id):
 
 @login_required
 def cart(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    carts = Cart.objects.filter(user=user_profile)
-    return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts})
+    if request.method == 'POST':
+        content = request.POST.get('search', '')
+        user_profile = UserProfile.objects.get(user=request.user)
+        carts = Cart.objects.filter(user=user_profile, goods__name__icontains=content).reverse()
+        return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts, 'message': content})
+    else:
+        user_profile = UserProfile.objects.get(user=request.user)
+        carts = Cart.objects.filter(user=user_profile).reverse()
+        return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts})
 
 
 @login_required
@@ -103,9 +123,15 @@ def delete_cart(request, cart_id):
 
 @login_required
 def mygoods(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    goods = Goods.objects.filter(seller=user_profile).reverse()
-    return render(request, 'mygoods.html', {'user_profile': user_profile, 'goods': goods})
+    if request.method == 'POST':
+        content = request.POST.get('search', '')
+        user_profile = UserProfile.objects.get(user=request.user)
+        goods = Goods.objects.filter(seller=user_profile, name__icontains=content).reverse()
+        return render(request, 'mygoods.html', {'user_profile': user_profile, 'goods': goods, 'message': content})
+    else:
+        user_profile = UserProfile.objects.get(user=request.user)
+        goods = Goods.objects.filter(seller=user_profile).reverse()
+        return render(request, 'mygoods.html', {'user_profile': user_profile, 'goods': goods})
 
 
 @login_required
@@ -161,13 +187,27 @@ def delete_goods(request, goods_id):
 
 
 @login_required
+def mysale(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    orders = Order.objects.filter(seller=user_profile, status=False).reverse()
+    return render(request, 'mysale.html', {'user_profile': user_profile, 'orders': orders})
+
+
+@login_required
+def completesale(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    orders = Order.objects.filter(seller=user_profile, status=True).reverse()
+    return render(request, 'completesale.html', {'user_profile': user_profile, 'orders': orders})
+
+
+@login_required
 def checkout(request, cart_id):
     user_profile = UserProfile.objects.get(user=request.user)
     cart = Cart.objects.get(id=cart_id)
     if request.method == 'POST':
         order = Order.objects.create()
         cart = Cart.objects.get(id=cart_id)
-        order.seller = cart.user
+        order.seller = cart.goods.seller
         order.buyer = user_profile
         order.goods = cart.goods
         order.num = cart.num
@@ -176,17 +216,57 @@ def checkout(request, cart_id):
         order.message = request.POST['message']
         order.save()
         Cart.objects.filter(id=cart_id).delete()
-        return render(request, 'myorder.html',{'user_profile': user_profile})
+        orders = Order.objects.filter(buyer=user_profile, status=False)
+        return render(request, 'myorder.html', {'user_profile': user_profile, 'orders': orders})
     return render(request, 'checkout.html', {'user_profile': user_profile, 'cart': cart})
+
 
 @login_required
 def myorder(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    orders = Order.objects.filter(buyer=user_profile).reverse()
-    return render(request, 'myorder.html', {'user_profile': user_profile, 'orders': orders})
+    if request.method == 'POST':
+        content = request.POST.get('search', '')
+        user_profile = UserProfile.objects.get(user=request.user)
+        orders = Order.objects.filter(buyer=user_profile, status=False, goods__name__icontains=content).reverse()
+        return render(request, 'myorder.html', {'user_profile': user_profile, 'orders': orders, 'message': content})
+    else:
+        user_profile = UserProfile.objects.get(user=request.user)
+        orders = Order.objects.filter(buyer=user_profile, status=False).reverse()
+        return render(request, 'myorder.html', {'user_profile': user_profile, 'orders': orders})
+
 
 @login_required
-def mysale(request):
+def completeorder(request):
+    if request.method == 'POST':
+        content = request.POST.get('search', '')
+        user_profile = UserProfile.objects.get(user=request.user)
+        orders = Order.objects.filter(buyer=user_profile, status=True, goods__name__icontains=content).reverse()
+        return render(request, 'completeorder.html', {'user_profile': user_profile, 'orders': orders, 'message': content})
+    else:
+        user_profile = UserProfile.objects.get(user=request.user)
+        orders = Order.objects.filter(buyer=user_profile, status=True).reverse()
+        return render(request, 'completeorder.html', {'user_profile': user_profile, 'orders': orders})
+
+
+@login_required
+def check_order(request, order_id):
     user_profile = UserProfile.objects.get(user=request.user)
-    orders = Order.objects.filter(seller=user_profile).reverse()
-    return render(request, 'mysale.html', {'user_profile': user_profile, 'orders': orders})
+    order = Order.objects.get(id=order_id)
+    order.status = True
+    order.save()
+    orders = Order.objects.filter(buyer=user_profile, status=True).reverse()
+    return render(request, 'completeorder.html', {'user_profile': user_profile, 'orders': orders})
+
+
+@login_required
+def delete_order(request, order_id):
+    user_profile = UserProfile.objects.get(user=request.user)
+    Order.objects.filter(id=order_id).delete()
+    orders = Order.objects.filter(buyer=user_profile, status=False).reverse()
+    return render(request, 'myorder.html', {'user_profile': user_profile, 'orders': orders})
+
+
+@login_required
+def categories(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    Categories = Category.objects.all()
+    return render(request, 'categories.html', {'user_profile': user_profile, 'categories': Categories})

@@ -68,6 +68,7 @@ class Order(models.Model):
     sum = models.FloatField(default=0)
     contact = models.CharField(max_length=20,null=True)
     message = models.CharField(max_length=512, blank=True)
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.message

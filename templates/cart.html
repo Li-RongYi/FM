@@ -30,6 +30,9 @@
 			</div>
 		</div>
     </div>
+    {% if message %}
+        <div>你检索的关键词: {{ message }}</div>
+    {% endif %}
 	<!-- Cart -->
 	<div class="cart_container">
 		<div class="container">
@@ -37,7 +40,12 @@
 				<div class="col">
 					<div class="cart_title">your shopping cart</div>
 				</div>
-			</div>
+                <form action="{% url 'cart' %}" method="post">
+                        {% csrf_token %}
+						<input type="search" class="search_input" required="required" id="search" name="search">
+						<button type="submit" id="search_button" class="search_button"><img src="../static/images/magnifying-glass.svg" alt=""></button>
+                </form>
+            </div>
 			<div class="row">
 				<div class="col">
 					<div class="cart_bar d-flex flex-row align-items-center justify-content-start">
@@ -122,7 +130,7 @@
 					</div>
 				</div>    -->
 				<!-- Cart Total -->
-				<div class="col-lg-5 offset-lg-1">
+		<!--		<div class="col-lg-5 offset-lg-1">
 					<div class="cart_total">
 						<div class="cart_title">cart total</div>
 						<ul>
@@ -141,7 +149,7 @@
 						</ul>
 						<button class="cart_total_button">proceed to checkout</button>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</div>

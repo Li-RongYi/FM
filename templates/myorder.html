@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_order.html' %}
 
 {% block content %}
 <meta charset="utf-8">
@@ -30,13 +30,21 @@
 			</div>
 		</div>
     </div>
+    {% if message %}
+        <div>你检索的关键词: {{ message }}</div>
+    {% endif %}
 	<!-- Cart -->
 	<div class="cart_container">
 		<div class="container">
 			<div class="row">
 				<div class="col">
-					<div class="cart_title">My Orders</div>
+					<div class="cart_title">My Order /<a href="{% url 'completeorder' %}"> Complete Order</a></div>
 				</div>
+                <form action="{% url 'myorder' %}" method="post">
+                        {% csrf_token %}
+						<input type="search" class="search_input" required="required" id="search" name="search">
+						<button type="submit" id="search_button" class="search_button"><img src="../static/images/magnifying-glass.svg" alt=""></button>
+                </form>
 			</div>
 			<div class="row">
 				<div class="col">
@@ -81,9 +89,11 @@
 										<!-- Product Cart Trash Button -->
 
 										<div class="cart_product_button">
-                                            <button class="cart_product_remove"><a href="{% url 'myorder' %}"><img src="../static/images/email.png" alt=""></a></button>
+                                            <button class="cart_product_remove"><a href="{% url 'check_order' order.id %}"><img src="../static/images/checked.png" alt=""></a></button>
 										</div>
-                                         </form>
+                                        <div class="cart_product_button">
+                                            <button class="cart_product_remove"><a href="{% url 'delete_order' order.id %}"><img src="../static/images/trash.png" alt=""></a></button>
+										</div>
 									</div>
 								</div>
 
@@ -91,7 +101,7 @@
 						</ul>
                             {% endfor %}
                                 {% else %}
-                                    you haven't published any goods yet!!
+                                    you haven't had any orders!!
                                 {% endif %}
 					</div>
 				</div>

@@ -88,7 +88,7 @@
     
       var data = canvas.toDataURL('image/png');
       photo.setAttribute('src', data);
-      document.getElementById('hidden_photo').value=data
+      document.getElementById('hidden_photo').value = data
     } else {
       clearphoto();
     }

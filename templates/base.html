@@ -27,16 +27,15 @@
 			<nav class="main_nav">
 				<ul>
 					<li><a href={% url 'index' %}>home</a></li>
-					<li><a href="categories.html">clothes</a></li>
-					<li><a href="categories.html">accessories</a></li>
-					<li><a href="categories.html">lingerie</a></li>
-					<li><a href="contact.html">contact</a></li>
+					<li><a href="{% url 'categories' %}">categories</a></li>
+                    <li><a href="{% url 'about' %}">about</a></li>
 				</ul>
 			</nav>
 			<div class="header_content ml-auto">
 				<div class="search header_search">
-					<form action="#">
-						<input type="search" class="search_input" required="required">
+					<form action="{% url 'index' %}" method="post">
+                        {% csrf_token %}
+						<input type="search" class="search_input" required="required" id="search" name="search">
 						<button type="submit" id="search_button" class="search_button"><img src="../static/images/magnifying-glass.svg" alt=""></button>
 					</form>
 				</div>
@@ -90,12 +89,12 @@
         <div class="img"><img src="{{ user_profile.avatar.url }}" height="100px" width="100px"></div>
         {% endif %}
 		<div class="logo menu_mm"><a href="#">{{ user_profile.nickname }}</a></div>
-		<div class="search">
+	<!--	<div class="search">
 			<form action="#">
 				<input type="search" class="search_input menu_mm" required="required">
 				<button type="submit" id="search_button_menu" class="search_button menu_mm"><img class="menu_mm" src="../static/images/magnifying-glass.svg" alt=""></button>
 			</form>
-		</div>
+		</div> -->
 		<nav class="menu_nav">
 			<ul class="menu_mm">
 				<li class="menu_mm"><a href={% url 'profilechange' %}>信息修改</a></li>

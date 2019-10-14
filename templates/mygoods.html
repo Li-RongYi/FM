@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_goods.html' %}
 
 {% block content %}
 <meta charset="utf-8">
@@ -30,6 +30,9 @@
 			</div>
 		</div>
     </div>
+    {% if message %}
+        <div>你检索的关键词: {{ message }}</div>
+    {% endif %}
 	<!-- Cart -->
 	<div class="cart_container">
 		<div class="container">
@@ -37,6 +40,11 @@
 				<div class="col">
 					<div class="cart_title">My Goods</div>
 				</div>
+                <form action="{% url 'mygoods' %}" method="post">
+                        {% csrf_token %}
+						<input type="search" class="search_input" required="required" id="search" name="search">
+						<button type="submit" id="search_button" class="search_button"><img src="../static/images/magnifying-glass.svg" alt=""></button>
+                </form>
 			</div>
 			<div class="row">
 				<div class="col">
@@ -105,7 +113,7 @@
 					<div class="cart_control_bar d-flex flex-md-row flex-column align-items-start justify-content-start">
 
 						<a href="{% url 'publish_goods' %}"><button class="button_clear cart_button">publish goods</button></a>
-                        <a href="{% url 'mygoods' %}"><button class="button_update cart_button">update goods</button></a>
+                        <a href="{% url 'mygoods' %}"><button class="button_update cart_button">update</button></a>
                         <button class="button_update cart_button_2 ml-md-auto"><a href="{% url 'index' %}">continue shopping</a></button>
 					</div>
 				</div>
