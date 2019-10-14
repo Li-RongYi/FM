@@ -2,7 +2,7 @@
 {% block content %}
   <body>
 
- <div class="col-md-7 col-md-offset-2 main" >
+ <div class="col-md-9 col-md-offset-2 main" >
             <form id="goods_form" method="post" action="{% url 'edit_goods' goods.id %}" enctype="multipart/form-data">
                 {% csrf_token %}
     <div style="float: right">

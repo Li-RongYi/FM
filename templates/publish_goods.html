@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
   <body>
- <div class="col-md-7 col-md-offset-2  main">
+ <div class="col-md-8 col-md-offset-2  main">
             <form id="goods_form" method="post" action="{% url 'publish_goods' %}" enctype="multipart/form-data">{% csrf_token %}
     <div style="float: right">
         <img class="release-icon-main" src="../static/images/release-icon.png">
