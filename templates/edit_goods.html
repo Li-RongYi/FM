@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
   <body>
- <div class="col-md-7 col-md-offset-2  main">
+
+ <div class="col-md-7 col-md-offset-2 main" >
             <form id="goods_form" method="post" action="{% url 'edit_goods' goods.id %}" enctype="multipart/form-data">
                 {% csrf_token %}
-    <div>
+    <div style="float: right">
         <div class="upload-wr">
             <div >
                 {% if  goods.picture %}
@@ -91,6 +92,7 @@
 
             <input type="submit" name="submit" class="btn btn-primary"
             style="width: 200px;margin-top: 20px; margin-left:250px" value="确认" />
+    </div>
         </form>
 
  </div>
