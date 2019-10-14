@@ -1,21 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
+    <div class="arrivals">
+            <div class="container">
     {% if message %}
         <div>你检索的关键词: {{ message }}</div>
-    {% else %}<!-- New Arrivals -->
-	<div class="arrivals">
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<div class="section_title_container text-center">
-						<div class="section_subtitle">各式各样</div>
-						<div class="section_title">商品大卖</div>
-					</div>
-				</div>
-			</div>
+    <!-- New Arrivals -->
+        {% else %}
+                <div class="row">
+                    <div class="col">
+                        <div class="section_title_container text-center">
+                            <div class="section_subtitle">各式各样</div>
+                            <div class="section_title">商品大卖</div>
+                        </div>
+                    </div>
+                </div>
     {% endif %}
     <div class="row products_container">
 				<!-- Product -->
+    {% if  goods %}
             {% for good in goods %}
 				<div class="col-lg-4 product_col">
 					<div class="product">
@@ -35,6 +37,9 @@
 					</div>
 				</div>
             {% endfor %}
+    {% else %}
+        Sorry!! There is nothing !!
+    {% endif %}
             </div>
         </div>
     </div>

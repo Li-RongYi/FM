@@ -30,7 +30,7 @@ def index_category(request, category_id):
     user_profile = UserProfile.objects.get(user=request.user)
     category = Category.objects.get(id=category_id)
     goods_list = Goods.objects.filter(category=category).order_by('-publish_time')
-    context_dic = {'user_profile': user_profile, 'goods': goods_list}
+    context_dic = {'user_profile': user_profile, 'goods': goods_list,'message':category.name}
     return render(request, 'index.html', context_dic)
 
 
@@ -142,7 +142,6 @@ def publish_goods(request):
         if goods_form.is_valid():
             goods = goods_form.save(commit=True)
             goods.seller = user_profile
-            print(goods.picture)
             if 'picture' in request.FILES:
                 goods.picture = request.FILES['picture']
             goods.save()

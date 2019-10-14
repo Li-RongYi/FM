@@ -27,4 +27,4 @@ class GoodsForm(forms.ModelForm):
 
     class Meta:
         model = Goods
-        exclude = ('seller', 'picture_url')
+        exclude = ('seller',)
