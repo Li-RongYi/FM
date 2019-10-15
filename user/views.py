@@ -175,7 +175,7 @@ def login_face(request):
             file.write(unknown_face)
             file.close()
             unknown_face = face_recognition.load_image_file(path)
-            #os.remove(path)
+            os.remove(path)
             try:
                 unknown_face_encoding = face_recognition.face_encodings(unknown_face)[0]
             except IndexError:
