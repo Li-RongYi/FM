@@ -163,28 +163,27 @@ def login_face(request):
         print(user.image)
         if user.image == '':
             return render(request, 'login_face.html',
-                          {'username': username, 'message': 'face login is not authenticated'})
+                          {'username': username, 'message': 'face login is not authorised'})
         if photo is not None and photo != '':
             print(photo)
             index = photo.find('base64,')
             base64Str = photo[index + 6:]
             unknown_face = base64.b64decode(base64Str)
             index = len(os.listdir('media/login'))
-            path = 'media/'+str(index)+'.png'
+            path = 'media/login/'+str(index)+'.png'
             file = open(path, 'wb')
             file.write(unknown_face)
             file.close()
             unknown_face = face_recognition.load_image_file(path)
-            os.remove(path)
+            #os.remove(path)
             try:
                 unknown_face_encoding = face_recognition.face_encodings(unknown_face)[0]
             except IndexError:
                 return render(request, 'login_face.html', {'username': username, 'message': 'no face detected'})
             known_face = face_recognition.load_image_file(user.image)
             known_face_encoding = face_recognition.face_encodings(known_face)[0]
-            unknown_face_encoding = unknown_face_encoding[0]
             result = face_recognition.compare_faces([known_face_encoding], unknown_face_encoding, 0.5)
-            if result:
+            if result[0]:
                 if user.is_active:
                     login(request, user)
                     return HttpResponseRedirect("/index/")
@@ -205,7 +204,7 @@ def user_logout(request):
 def profilechange(request):
     user_profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
-        print(request.POST)
+        print(request.POST,request.FILES)
         form = ProfileForm(request.POST)
         if form.is_valid():
             user = User.objects.get(username=request.user)
@@ -217,12 +216,19 @@ def profilechange(request):
                     user.image = image_path
                     user.save()
                 except IndexError:
+                    form.initial['image'] = user.image
+                    form.initial['avatar'] = user_profile.avatar
                     return render(request, 'profilechange.html', {'user_profile': user_profile, 'profile_form': form, 'message': ' photo : no face detected'})
-            user_profile.__dict__.update(**form.cleaned_data)
             if 'avatar' in request.FILES:
+                user_profile.__dict__.update(**form.cleaned_data)
                 user_profile.avatar = request.FILES['avatar']
+            else:
+                avatar_path = user_profile.avatar
+                user_profile.__dict__.update(**form.cleaned_data)
+                user_profile.avatar = avatar_path
             user_profile.save()
-            print(form.cleaned_data)
+            form.initial['image'] = user.image
+            form.initial['avatar'] = user_profile.avatar
             return render(request, 'profilechange.html',
                           {'user_profile': user_profile, 'profile_form': form, 'message': "修改成功"})
     profile_form = ProfileForm(instance=user_profile)
