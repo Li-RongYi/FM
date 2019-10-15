@@ -87,8 +87,8 @@
       context.drawImage(video, 0, 0, width, height);
     
       var data = canvas.toDataURL('image/png');
-      photo.setAttribute('src', data);
       document.getElementById('hidden_photo').value = data
+      photo.setAttribute('src', data);
     } else {
       clearphoto();
     }

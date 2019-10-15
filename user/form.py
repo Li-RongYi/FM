@@ -17,7 +17,7 @@ class RegisterForm(forms.Form):
     password2 = forms.CharField(label="确认密码", max_length=256,
                                 widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     gender = forms.ChoiceField(label='性别', choices=gender)
-    image = forms.ImageField(label='照片',required=False)
+    #image = forms.ImageField(label='照片',required=False)
     avatar = forms.ImageField(label='头像',required=False)
 
 class ProfileForm(forms.ModelForm):

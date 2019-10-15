@@ -10,6 +10,7 @@ from FM.settings import EMAIL_FROM
 from django.contrib.auth.decorators import login_required
 import base64
 import face_recognition
+import os
 
 
 def authenticate(username=None, password=None):
@@ -67,14 +68,16 @@ def register_info(request, username='12345'):
             gender = register_form.cleaned_data['gender']
             user = User.objects.create(username=username, email=email)
             user.set_password(password)
-            if 'image' in request.FILES:
-                user.image = request.FILES['image']
+            # if 'image' in request.FILES:
+            #     user.image = request.FILES['image']
             user.save()
             user_info = UserProfile.objects.create(user=user)
             user_info.nickname = nickname
             user_info.gender = gender
             if 'avatar' in request.FILES:
                 user_info.avatar = request.FILES['avatar']
+            else:
+                user_info.avatar = 'profile/default.jpg'
             user_info.save()
 
             return render(request, 'login.html', {'username': username})
@@ -152,23 +155,43 @@ def login_face(request):
     if request.method == 'POST':
         print(request.POST)
         photo = request.POST.get('hidden_photo', None)
+        username = request.POST.get('username', None)
+        try:
+            user = User.objects.get(Q(email=username) | Q(username=username))
+        except User.DoesNotExist:
+            return render(request, 'login_face.html', {'username': username, 'message': 'no existed'})
+        print(user.image)
+        if user.image == '':
+            return render(request, 'login_face.html',
+                          {'username': username, 'message': 'face login is not authenticated'})
         if photo is not None and photo != '':
             print(photo)
             index = photo.find('base64,')
             base64Str = photo[index + 6:]
             unknown_face = base64.b64decode(base64Str)
-            file = open('loginphoto.jpg', 'wb')
+            index = len(os.listdir('media/login'))
+            path = 'media/'+str(index)+'.png'
+            file = open(path, 'wb')
             file.write(unknown_face)
             file.close()
-            unknown_face = face_recognition.load_image_file('loginphoto.jpg')
-            unknown_face_location = face_recognition.face_locations(unknown_face)
-            unknown_face_encoding = face_recognition.face_encodings(unknown_face, unknown_face_location)[0]
-            image = User.objects.get(username=request.user).__dict__['image']
-            known_face = face_recognition.load_image_file(image)
+            unknown_face = face_recognition.load_image_file(path)
+            os.remove(path)
+            try:
+                unknown_face_encoding = face_recognition.face_encodings(unknown_face)[0]
+            except IndexError:
+                return render(request, 'login_face.html', {'username': username, 'message': 'no face detected'})
+            known_face = face_recognition.load_image_file(user.image)
             known_face_encoding = face_recognition.face_encodings(known_face)[0]
             unknown_face_encoding = unknown_face_encoding[0]
             result = face_recognition.compare_faces([known_face_encoding], unknown_face_encoding, 0.5)
-            print(result)
+            if result:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect("/index/")
+                else:
+                    return render(request, 'login_face.html', {'username': username, 'message': 'user cannot be user'})
+            else:
+                return render(request, 'login_face.html', {'username': username, 'message': 'no macth'})
     return render(request, 'login_face.html')
 
 
@@ -185,16 +208,23 @@ def profilechange(request):
         print(request.POST)
         form = ProfileForm(request.POST)
         if form.is_valid():
-            user_profile.__dict__.update(**form.cleaned_data)
-            if 'avatar' in request.FILES:
-                user_profile.avatar=request.FILES['avatar']
-            user_profile.save()
             user = User.objects.get(username=request.user)
             if 'image' in request.FILES:
-                user.image = request.FILES['image']
-            user.save()
+                image_path = request.FILES['image']
+                try:
+                    image = face_recognition.load_image_file(image_path)
+                    face_recognition.face_encodings(image)[0]
+                    user.image = image_path
+                    user.save()
+                except IndexError:
+                    return render(request, 'profilechange.html', {'user_profile': user_profile, 'profile_form': form, 'message': ' photo : no face detected'})
+            user_profile.__dict__.update(**form.cleaned_data)
+            if 'avatar' in request.FILES:
+                user_profile.avatar = request.FILES['avatar']
+            user_profile.save()
             print(form.cleaned_data)
-            return render(request, 'profilechange.html', {'user_profile': user_profile, 'profile_form': form,'message':"修改成功"})
+            return render(request, 'profilechange.html',
+                          {'user_profile': user_profile, 'profile_form': form, 'message': "修改成功"})
     profile_form = ProfileForm(instance=user_profile)
     profile_form.initial['image'] = User.objects.get(username=request.user).image
     return render(request, 'profilechange.html', {'user_profile': user_profile, 'profile_form': profile_form})
