@@ -73,7 +73,7 @@
                             <div class="cart_product_image"><img src="{{ order.goods.picture.url }}" height="100px" width="100px" alt="{{ order.goods.name }}"></div>
                         {% endif %}
                                   <!-- Product Name -->
-								<div class="cart_product_name"><a href="product.html">{{ order.goods.name }}</a></div>
+								<div class="cart_product_name"><a href="{% url 'goods' order.goods.id %}">{{ order.goods.name }}</a></div>
 								<div class="cart_product_info  ml-auto">
 									<div class="cart_product_info_inner d-flex flex-row align-items-center justify-content-md-end justify-content-start">
 										<!-- Product Price -->
