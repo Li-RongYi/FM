@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+<<<<<<< HEAD
                <form role="form" method="post" action="{% url 'profilechange' %}" enctype="multipart/form-data">
+=======
+<body>
+
+ <div class="col-md-8 col-md-offset-2 main" >
+                <div style="float: right">
+               <form role="form" method="post" action="{% url 'profilechange' %}">
+>>>>>>> lyf
                    {% if message %}
                   <div class="alert alert-warning">{{ message }}</div>
               {% endif %}
@@ -31,5 +39,9 @@
 
               <button type="submit" class="btn">确认</button>
 
+
           </form>
+           </div>
+ </div>
+</body>
 {% endblock %}
