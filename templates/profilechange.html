@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+<<<<<<< HEAD
+               <form role="form" method="post" action="{% url 'profilechange' %}" enctype="multipart/form-data">
+=======
 <body>
 
  <div class="col-md-8 col-md-offset-2 main" >
                 <div style="float: right">
                <form role="form" method="post" action="{% url 'profilechange' %}">
+>>>>>>> lyf
                    {% if message %}
                   <div class="alert alert-warning">{{ message }}</div>
               {% endif %}
@@ -19,12 +23,19 @@
                   {{ profile_form.gender }}
               </div>
                <div class="form-group">
+                  {{ profile_form.contact.label_tag }}
+                  {{ profile_form.contact }}
+              </div>
+               <div class="form-group">
                   {{ profile_form.avatar.label_tag }}
                    {{ profile_form.avatar }}
-                   {% if profile_form.avatar %}
-                    <div class="img"><img src="{{profile_form.avatar.url }}" height="100px" width="100px"></div>
-                   {% endif %}
               </div>
+               <div class="form-group">
+                  {{ profile_form.image.label_tag }}
+                   {{ profile_form.image }}
+              </div>
+
+
 
               <button type="submit" class="btn">确认</button>
 

@@ -56,9 +56,6 @@ class Cart(models.Model):
     price = models.FloatField(default=0)
     num = models.PositiveIntegerField(default=1)
     sum = models.FloatField(default=0)
-
-    def __str__(self):
-        return self.sum
     
 class Order(models.Model):
     seller = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE,related_name='seller')
@@ -68,6 +65,7 @@ class Order(models.Model):
     sum = models.FloatField(default=0)
     contact = models.CharField(max_length=20,null=True)
     message = models.CharField(max_length=512, blank=True)
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.message

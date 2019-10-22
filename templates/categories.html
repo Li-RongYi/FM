@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<title>分类</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Wish shop project">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="../static/styles/bootstrap4/bootstrap.min.css">
+<link href="../static/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../static/plugins/malihu-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../static/plugins/jquery-ui-1.12.1.custom/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="../static/styles/categories.css">
+<link rel="stylesheet" type="text/css" href="../static/styles/categories_responsive.css">
+
+
+	<!-- Home -->
+
+    <div class="home_container">
+		<div class="parallax-window home_background " data-parallax="scroll" data-image-src="../static/images/categories.jpg" data-speed="0.8"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="home_container">
+						<div class="home_content">
+							<div class="home_title">Categories</div>
+							<div class="breadcrumbs">
+								<ul>
+									<li><a href={% url 'index' %}>Home</a></li>
+									<li>Categories</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+
+	<!-- Products -->
+
+	<div class="products">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					
+					<!-- Sidebar Left -->
+
+					<div class="sidebar_left clearfix">
+
+						<!-- Categories -->
+						<div class="sidebar_section">
+							<div class="sidebar_title">Categories</div>
+							<div class="sidebar_section_content">
+                                    <ul>
+                                    {% for category in categories %}
+                                        <li><a href="{% url 'index_category' category.id %}">{{ category.name }}</a></li>
+                                    {% endfor %}
+                                    </ul>
+							</div>
+						</div>
+
+
+						<!-- Color -->
+	<!--					<div class="sidebar_section">
+							<div class="sidebar_title">Color</div>
+							<div class="sidebar_section_content sidebar_color_content mCustomScrollbar" data-mcs-theme="minimal-dark">
+								<ul>
+									<li><a href="#"><span style="background:#a3ccff"></span>Blue (23)</a></li>
+									<li><a href="#"><span style="background:#937c6f"></span>Brown (11)</a></li>
+									<li><a href="#"><span style="background:#000000"></span>Black (61)</a></li>
+									<li><a href="#"><span style="background:#ff5c00"></span>Orange (34)</a></li>
+									<li><a href="#"><span style="background:#a3ffb2"></span>Green (17)</a></li>
+									<li><a href="#"><span style="background:#f52832"></span>Red (22)</a></li>
+									<li><a href="#"><span style="background:#fdabf4"></span>Pink (7)</a></li>
+									<li><a href="#"><span style="background:#ecf863"></span>Yellow (13)</a></li>
+								</ul>
+							</div>
+						</div> -->
+
+						<!-- Size -->
+	<!--					<div class="sidebar_section">
+							<div class="sidebar_title">Size</div>
+							<div class="sidebar_section_content">
+								<ul>
+									<li><a href="#">Small S (23)</a></li>
+									<li><a href="#">Medium M (11)</a></li>
+									<li><a href="#">Large L (61)</a></li>
+									<li><a href="#">Extra Large XL (34)</a></li>
+								</ul>
+							</div>
+						</div> -->
+
+						<!-- Price -->
+	<!--					<div class="sidebar_section">
+							<div class="sidebar_title">Price</div>
+							<div class="sidebar_section_content">
+								<div class="filter_price">
+									<div id="slider-range" class="slider_range"></div>
+									<p><input type="text" id="amount" class="amount" readonly style="border:0; font-weight:bold;"></p>
+									<div class="clear_price_btn">Clear Price</div>
+								</div>
+							</div>
+						</div> -->
+
+
+
+					</div>
+				</div>
+			</div>
+        </div>
+    </div>
+
+
+
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/styles/bootstrap4/popper.js"></script>
+<script src="../static/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="../static/plugins/easing/easing.js"></script>
+<script src="../static/plugins/parallax-js-master/parallax.min.js"></script>
+<script src="../static/plugins/Isotope/isotope.pkgd.min.js"></script>
+<script src="../static/plugins/malihu-custom-scrollbar/jquery.mCustomScrollbar.js"></script>
+<script src="../static/plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<script src="../static/js/categories_custom.js"></script>
+
+{% endblock %}

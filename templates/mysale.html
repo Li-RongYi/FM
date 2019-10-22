@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_goods.html' %}
 
 {% block content %}
 <meta charset="utf-8">
@@ -11,17 +11,17 @@
 <link rel="stylesheet" type="text/css" href="../static/styles/cart_responsive.css">
 	<!-- Home -->
     <div class="home_container">
-		<div class="parallax-window home_background " data-parallax="scroll" data-image-src="../static/images/order.jpg" data-speed="0.8"></div>
+		<div class="parallax-window home_background " data-parallax="scroll" data-image-src="../static/images/goods.jpg" data-speed="0.8"></div>
 		<div class="container">
 			<div class="row">
 				<div class="col">
 					<div class="home_container">
 						<div class="home_content">
-							<div class="home_title">My Orders</div>
+							<div class="home_title">My Sale</div>
 							<div class="breadcrumbs">
 								<ul>
 									<li><a href={% url 'index' %}>Home</a></li>
-									<li>My Orders</li>
+									<li>My Sale</li>
 								</ul>
 							</div>
 						</div>
@@ -35,7 +35,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col">
-					<div class="cart_title">My Orders</div>
+					<div class="cart_title">My Sale /<a href="{% url 'completesale' %}"> Complete Sale</a></div>
 				</div>
 			</div>
 			<div class="row">
@@ -44,7 +44,7 @@
 						<div class="cart_bar_title_name">Product</div>
 						<div class="cart_bar_title_content ml-auto">
 							<div class="cart_bar_title_content_inner d-flex flex-row align-items-center justify-content-end">
-								<div class="cart_bar_title_price">Seller</div>
+								<div class="cart_bar_title_price">Buyer</div>
 								<div class="cart_bar_title_quantity">Quantity</div>
 								<div class="cart_bar_title_total">Total</div>
 								<div class="cart_bar_title_button"></div>
@@ -65,11 +65,11 @@
                             <div class="cart_product_image"><img src="{{ order.goods.picture.url }}" height="100px" width="100px" alt="{{ order.goods.name }}"></div>
                         {% endif %}
                                   <!-- Product Name -->
-								<div class="cart_product_name"><a href="product.html">{{ order.goods.name }}</a></div>
+								<div class="cart_product_name"><a href="{% url 'goods' order.goods.id %}">{{ order.goods.name }}</a></div>
 								<div class="cart_product_info  ml-auto">
 									<div class="cart_product_info_inner d-flex flex-row align-items-center justify-content-md-end justify-content-start">
 										<!-- Product Price -->
-										<div class="cart_product_price">{{ order.seller.nickname }}</div>
+										<div class="cart_product_price">{{ order.buyer.nickname }}</div>
 										<!-- Product Quantity -->
 										<div class="product_quantity_container">
 											<div class="product_quantity clearfix">
@@ -83,7 +83,7 @@
 										<div class="cart_product_button">
                                             <button class="cart_product_remove"><a href="{% url 'myorder' %}"><img src="../static/images/email.png" alt=""></a></button>
 										</div>
-                                         </form>
+
 									</div>
 								</div>
 
@@ -91,7 +91,7 @@
 						</ul>
                             {% endfor %}
                                 {% else %}
-                                    you haven't published any goods yet!!
+                                    you haven't had any sales yet!!
                                 {% endif %}
 					</div>
 				</div>
@@ -99,9 +99,8 @@
 			<div class="row">
 				<div class="col">
 					<div class="cart_control_bar d-flex flex-md-row flex-column align-items-start justify-content-start">
-
-						<a href="{% url 'myorder' %}"><button class="button_clear cart_button">my orders</button></a>
-                        <a href="{% url 'mysale' %}"><button class="button_update cart_button">update orders</button></a>
+						<a href="{% url 'mygoods' %}"><button class="button_clear cart_button">my goods</button></a>
+                        <a href="{% url 'mysale' %}"><button class="button_update cart_button">update</button></a>
                         <button class="button_update cart_button_2 ml-md-auto"><a href="{% url 'index' %}">continue shopping</a></button>
 					</div>
 				</div>

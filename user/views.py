@@ -1,5 +1,5 @@
 # login/views.py
-from django.shortcuts import render, HttpResponseRedirect,HttpResponse
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.core.mail import send_mail
 from django.contrib.auth import login, logout
 from django.db.models import Q
@@ -9,6 +9,8 @@ from random import randint
 from FM.settings import EMAIL_FROM
 from django.contrib.auth.decorators import login_required
 import base64
+#import face_recognition
+import os
 
 
 def authenticate(username=None, password=None):
@@ -42,7 +44,7 @@ def user_login(request):
     if request.method == "POST":
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
-        print(username,password)
+        print(username, password)
         message = '账号或者密码错误'
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -64,16 +66,18 @@ def register_info(request, username='12345'):
             password = register_form.cleaned_data['password1']
             nickname = register_form.cleaned_data['nickname']
             gender = register_form.cleaned_data['gender']
-            avatar = register_form.cleaned_data['avatar']
-            image = register_form.cleaned_data['image']
             user = User.objects.create(username=username, email=email)
             user.set_password(password)
-            user.image = image
+            # if 'image' in request.FILES:
+            #     user.image = request.FILES['image']
             user.save()
             user_info = UserProfile.objects.create(user=user)
             user_info.nickname = nickname
             user_info.gender = gender
-            user_info.avatar = avatar
+            if 'avatar' in request.FILES:
+                user_info.avatar = request.FILES['avatar']
+            else:
+                user_info.avatar = 'profile/default.jpg'
             user_info.save()
 
             return render(request, 'login.html', {'username': username})
@@ -150,9 +154,43 @@ def login_code(request):
 def login_face(request):
     if request.method == 'POST':
         print(request.POST)
-        photo = request.POST.get('hidden_photo',None)
-        if photo is not None:
-            img = base64.b64decode(photo.split(',')[-1])
+        photo = request.POST.get('hidden_photo', None)
+        username = request.POST.get('username', None)
+        try:
+            user = User.objects.get(Q(email=username) | Q(username=username))
+        except User.DoesNotExist:
+            return render(request, 'login_face.html', {'username': username, 'message': 'no existed'})
+        print(user.image)
+        if user.image == '':
+            return render(request, 'login_face.html',
+                          {'username': username, 'message': 'face login is not authorised'})
+        if photo is not None and photo != '':
+            print(photo)
+            index = photo.find('base64,')
+            base64Str = photo[index + 6:]
+            unknown_face = base64.b64decode(base64Str)
+            index = len(os.listdir('media/login'))
+            path = 'media/login/'+str(index)+'.png'
+            file = open(path, 'wb')
+            file.write(unknown_face)
+            file.close()
+            unknown_face = face_recognition.load_image_file(path)
+            #os.remove(path)
+            try:
+                unknown_face_encoding = face_recognition.face_encodings(unknown_face)[0]
+            except IndexError:
+                return render(request, 'login_face.html', {'username': username, 'message': 'no face detected'})
+            known_face = face_recognition.load_image_file(user.image)
+            known_face_encoding = face_recognition.face_encodings(known_face)[0]
+            result = face_recognition.compare_faces([known_face_encoding], unknown_face_encoding, 0.5)
+            if result[0]:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect("/index/")
+                else:
+                    return render(request, 'login_face.html', {'username': username, 'message': 'user cannot be user'})
+            else:
+                return render(request, 'login_face.html', {'username': username, 'message': 'no macth'})
     return render(request, 'login_face.html')
 
 
@@ -166,9 +204,37 @@ def user_logout(request):
 def profilechange(request):
     user_profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
-        pass #save  all infomation
+        print(request.POST,request.FILES)
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username=request.user)
+            if 'image' in request.FILES:
+                image_path = request.FILES['image']
+                try:
+                    image = face_recognition.load_image_file(image_path)
+                    face_recognition.face_encodings(image)[0]
+                    user.image = image_path
+                    user.save()
+                except IndexError:
+                    form.initial['image'] = user.image
+                    form.initial['avatar'] = user_profile.avatar
+                    return render(request, 'profilechange.html', {'user_profile': user_profile, 'profile_form': form, 'message': ' photo : no face detected'})
+            if 'avatar' in request.FILES:
+                user_profile.__dict__.update(**form.cleaned_data)
+                user_profile.avatar = request.FILES['avatar']
+            else:
+                avatar_path = user_profile.avatar
+                user_profile.__dict__.update(**form.cleaned_data)
+                user_profile.avatar = avatar_path
+            user_profile.save()
+            form.initial['image'] = user.image
+            form.initial['avatar'] = user_profile.avatar
+            return render(request, 'profilechange.html',
+                          {'user_profile': user_profile, 'profile_form': form, 'message': "修改成功"})
+    profile_form = ProfileForm(instance=user_profile)
+    profile_form.initial['image'] = User.objects.get(username=request.user).image
+    return render(request, 'profilechange.html', {'user_profile': user_profile, 'profile_form': profile_form})
 
-    return render(request,'profilechange.html', {'user_profile':user_profile,'profile_form':ProfileForm()})
 
 @login_required
 def passwordchange(request):
@@ -178,7 +244,7 @@ def passwordchange(request):
         email = request.user.email
         if button == 'email':
             state = send_email(email)
-            return render(request, 'passwordchange.html',{'user_profile':user_profile})
+            return render(request, 'passwordchange.html', {'user_profile': user_profile})
         else:
             if ConfirmString.objects.filter(email=email):
                 confirmcode = ConfirmString.objects.get(email=email).__dict__['code']
@@ -189,10 +255,11 @@ def passwordchange(request):
                     user = User.objects.get(username=request.user)
                     user.set_password(password)
                     user.save()
-                    return render(request, 'login.html', {'user_profile':user_profile,'message': '修改成功'})
+                    return render(request, 'login.html', {'user_profile': user_profile, 'message': '修改成功'})
                 else:
-                    return render(request, 'passwordchange.html', {'user_profile':user_profile,'message': '验证码错误'})
-    return render(request,'passwordchange.html',{'user_profile':user_profile})
+                    return render(request, 'passwordchange.html', {'user_profile': user_profile, 'message': '验证码错误'})
+    return render(request, 'passwordchange.html', {'user_profile': user_profile})
+
 
 @login_required
 def accountcancellation(request):
@@ -202,6 +269,4 @@ def accountcancellation(request):
         user.is_active = False
         user.save()
         return render(request, 'login.html')
-    return render(request,'accountcancellation.html',{'user_profile':user_profile})
-
-
+    return render(request, 'accountcancellation.html', {'user_profile': user_profile})

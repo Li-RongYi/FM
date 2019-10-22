@@ -6,7 +6,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap Register Form Template</title>
+        <title>人脸登录</title>
 
         <!-- CSS -->
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
@@ -61,20 +61,24 @@
                         		</div>
                             </div>
                             <div class="form-bottom">
-                                <form role="form" method="post" action="{% url 'login_face' %}">
+                                <form role="form" method="post" action="{% url 'login_face' %}" enctype="multipart/form-data">
                                     {% csrf_token %}
+                                    {% if message %}
+                                        <div class="alert alert-warning">{{ message }}</div>
+                                    {% endif %}
+                                <label class="sr-only" for="form-username">Username</label>
+                                <input type="text" name="username" placeholder="账号/邮箱..." class="form-username form-control" id="username" value={{username}}>
                                 <div class="camera">
                                     <video id="video">Video stream not available.</video>
                                         <button id="startbutton">Take photo</button>
                                 </div>
                                     <canvas id="canvas">
-                                    </canvas>
-                                <div class="output" >
+                                        </canvas>
+                                        <div class="output" >
                                         <img id="photo"  alt="The screen capture will appear in this box.">
-                                        <input type="hidden" id="hidden_photo" name="hidden_photo" default="None">
+                                            <input type='hidden' id="hidden_photo" name="hidden_photo">
                                         <button type="submit" id="startbutton">Send</button>
                                 </div>
-                        			<i class="fa fa-key"></i>
                                 </form>
 		                    </div>
                         </div>
@@ -86,10 +90,18 @@
 		-->
 
         <!-- Javascript -->
-        <script src="../../static/js/jquery-1.11.1.min.js"></script>
-        <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
-        <script src="../../static/js/jquery.backstretch.min.js"></script>
-        <script src="../../static/js/scripts.js"></script>
+        <script>
+            document.getElementById("startbutton").onclick = function() {
+                    if (document.getElementById("username").value == ""){
+                    alert("username empty");
+                    return false;
+                }
+        };
+        </script>
+        <script src="../static/js/jquery-1.11.1.min.js"></script>
+        <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../static/js/jquery.backstretch.min.js"></script>
+        <script src="../static/js/scripts.js"></script>
         <script src="../static/capture.js"></script>
 
         
