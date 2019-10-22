@@ -780,6 +780,10 @@ section
 	padding-bottom: 35px;
 	padding-top: 32px;
 }
+.cart_product_image
+{
+	width: 100%;
+}
 .cart_product_info
 {
 	width: 532px;
