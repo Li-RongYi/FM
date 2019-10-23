@@ -9,7 +9,11 @@ from random import randint
 from FM.settings import EMAIL_FROM
 from django.contrib.auth.decorators import login_required
 import base64
+<<<<<<< HEAD
+#import face_recognition
+=======
 import face_recognition
+>>>>>>> 360177888e57345652b80a9f9f7b25cf459d78d3
 import os
 
 

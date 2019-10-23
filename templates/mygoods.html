@@ -52,6 +52,7 @@
 						<div class="cart_bar_title_name">Product</div>
 						<div class="cart_bar_title_content ml-auto">
 							<div class="cart_bar_title_content_inner d-flex flex-row align-items-center justify-content-end">
+                                <div class="cart_bar_title_description">Description</div>
 								<div class="cart_bar_title_price">Price</div>
 								<div class="cart_bar_title_quantity">Quantity</div>
 								<div class="cart_bar_title_total">Total</div>
@@ -76,6 +77,8 @@
 								<div class="cart_product_name"><a href="{% url 'goods' good.id %}">{{ good.name }}</a></div>
 								<div class="cart_product_info  ml-auto">
 									<div class="cart_product_info_inner d-flex flex-row align-items-center justify-content-md-end justify-content-start">
+										<!-- Product Description -->
+										<div class="cart_product_price">{{ good.description }}</div>
 										<!-- Product Price -->
 										<div class="cart_product_price">￥{{ good.price }}</div>
 										<!-- Product Quantity -->
