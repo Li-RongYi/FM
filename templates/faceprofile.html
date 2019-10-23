@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+    <body>
+    <link rel="stylesheet" href="../static/main.css" type="text/css" media="all">
+    <div class="col-md-7 col-md-offset-2 main">
+        <div style="float: right">
+            <form role="form" method="post" action="{% url 'faceprofile' %}" enctype="multipart/form-data">
+                {% if message %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                {% endif %}
+
+                {% csrf_token %}
+                <input type="hidden" name="btn-state" id="btn-state" value="submit">
+
+                <div class="form-group">
+                    <label>Code</label>
+                    <input type="text" name="code" placeholder="验证码..." maxlength="6" class="form-password form-control"
+                           id="code">
+                    <button type="submit" class="btn-group" id="btn-email">获取验证码</button>
+                </div>
+                <div class="camera">
+                    <video id="video">Video stream not available.</video>
+                    <button id="startbutton">Take photo</button>
+                </div>
+                <canvas id="canvas"></canvas>
+                <div class="output">
+                    <img id="photo" alt="The screen capture will appear in this box.">
+                    <input type='hidden' id="hidden_photo" name="hidden_photo">
+                    <button type="submit" id="startbutton">Send</button>
+                </div>
+            </form>
+            <script>
+                document.getElementById("btn-email").onclick = function () {
+                    document.getElementById("btn-state").value = 'email'
+                };
+            </script>
+            <script>
+                document.getElementById("startbutton").onclick = function () {
+                    if (document.getElementById("code").value == "") {
+                        alert("code empty");
+                        return false;
+                    }
+                };
+            </script>
+            <script src="../static/capture.js"></script>
+        </div>
+    </div>
+    </body>
+{% endblock %}

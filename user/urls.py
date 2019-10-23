@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^login_code/$', views.login_code, name='login_code'),
     url(r'^login_face/$', views.login_face, name='login_face'),
     url(r'^profile/', views.profilechange, name='profilechange'),
+    url(r'^faceprofile/', views.faceprofile, name='faceprofile'),
     url(r'^passwordchange/', views.passwordchange, name='passwordchange'),
     url(r'^accountcancellation/', views.accountcancellation, name='accountcancellation'),
 ]

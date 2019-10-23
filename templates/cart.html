@@ -65,9 +65,9 @@
 				<div class="col">
 					<div class="cart_products">
 						<ul>
-							<br class=" cart_product d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
-                                {% if carts %}
+                            {% if carts %}
                                 {% for cart in carts %}
+                                    <li class=" cart_product d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
                                  <!-- Product Image -->
                                     {% if cart.goods.picture %}
 								 <div class="cart_product_image"><img src="{{ cart.goods.picture.url }}" height="100px" width="100px" alt="{{ cart.goods.name }}"></div>
@@ -96,12 +96,11 @@
 										</div>
 									</div>
 								</div>
-                                    </br>
+                                    </li>
                                 {% endfor %}
                                 {% else %}
                                     There is nothing in the cart!!
                                 {% endif %}
-							</li>
 						</ul>
 					</div>
 				</div>
