@@ -730,6 +730,9 @@ section
 .cart_bar_title_name,
 .cart_bar_title_description,
 .cart_bar_title_price,
+.cart_bar_title_buyer,
+.cart_bar_title_contact,
+.cart_bar_title_message,
 .cart_bar_title_quantity,
 .cart_bar_title_total
 {
@@ -759,6 +762,27 @@ section
 	width: 31%;
 	text-align: center;
 }
+.cart_bar_title_buyer
+{
+	width: 20%;
+	text-align: center;
+}
+.cart_bar_title_seller
+{
+	width: 20%;
+	text-align: center;
+}
+.cart_bar_title_contact
+{
+	width: 25%;
+	text-align: center;
+}
+.cart_bar_title_message
+{
+	width: 21%;
+	text-align: center;
+}
+
 .cart_bar_title_quantity
 {
 	width: 37%;
@@ -780,10 +804,6 @@ section
 	padding-bottom: 35px;
 	padding-top: 32px;
 }
-.cart_product_image
-{
-	width: 100%;
-}
 .cart_product_info
 {
 	width: 532px;
@@ -794,6 +814,9 @@ section
 }
 .cart_product_name a,
 .cart_product_description,
+.cart_product_nickname,
+.cart_product_contact,
+.cart_product_message,
 .cart_product_price,
 .cart_product_total
 {
@@ -806,9 +829,24 @@ section
 	width: 35%;
 	text-align: center;
 }
+.cart_product_nickname
+{
+	width: 10%;
+	text-align: center;
+}
+.cart_product_contact
+{
+	width: 10%;
+	text-align: center;
+}
+.cart_product_message
+{
+	width: 10%;
+	text-align: center;
+}
 .cart_product_price
 {
-	width: 31%;
+	width: 10%;
 	text-align: center;
 }
 .product_quantity_container

@@ -29,9 +29,7 @@ class ProfileForm(forms.ModelForm):
     gender = forms.ChoiceField(label='性别', choices=gender)
     contact = forms.CharField(label='联系', max_length=20, required=False)
     avatar = forms.ImageField(label='头像',required=False)
-    image = forms.ImageField(label='照片', required=False)
 
     class Meta:
         model = UserProfile
-        exclude = ('image','user')
-
+        exclude = ('user',)

@@ -59,7 +59,7 @@
                         {% if orders %}
                             {% for order in orders %}
                     <ul>
-							<br class=" cart_product d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
+                        <li class=" cart_product d-flex flex-md-row flex-column align-items-md-center align-items-start justify-content-start">
                         <!-- Product Image -->
                         {% if order.goods.picture %}
                             <div class="cart_product_image"><img src="{{ order.goods.picture.url }}" height="100px" width="100px" alt="{{ order.goods.name }}"></div>

@@ -10,8 +10,6 @@ from FM.settings import EMAIL_FROM
 from django.contrib.auth.decorators import login_required
 import base64
 #import face_recognition
-#import face_recognition
-
 import os
 
 
@@ -177,7 +175,7 @@ def login_face(request):
             file.write(unknown_face)
             file.close()
             unknown_face = face_recognition.load_image_file(path)
-            #os.remove(path)
+            os.remove(path)
             try:
                 unknown_face_encoding = face_recognition.face_encodings(unknown_face)[0]
             except IndexError:
@@ -210,17 +208,6 @@ def profilechange(request):
         form = ProfileForm(request.POST)
         if form.is_valid():
             user = User.objects.get(username=request.user)
-            if 'image' in request.FILES:
-                image_path = request.FILES['image']
-                try:
-                    image = face_recognition.load_image_file(image_path)
-                    face_recognition.face_encodings(image)[0]
-                    user.image = image_path
-                    user.save()
-                except IndexError:
-                    form.initial['image'] = user.image
-                    form.initial['avatar'] = user_profile.avatar
-                    return render(request, 'profilechange.html', {'user_profile': user_profile, 'profile_form': form, 'message': ' photo : no face detected'})
             if 'avatar' in request.FILES:
                 user_profile.__dict__.update(**form.cleaned_data)
                 user_profile.avatar = request.FILES['avatar']
@@ -229,12 +216,10 @@ def profilechange(request):
                 user_profile.__dict__.update(**form.cleaned_data)
                 user_profile.avatar = avatar_path
             user_profile.save()
-            form.initial['image'] = user.image
             form.initial['avatar'] = user_profile.avatar
             return render(request, 'profilechange.html',
                           {'user_profile': user_profile, 'profile_form': form, 'message': "修改成功"})
     profile_form = ProfileForm(instance=user_profile)
-    profile_form.initial['image'] = User.objects.get(username=request.user).image
     return render(request, 'profilechange.html', {'user_profile': user_profile, 'profile_form': profile_form})
 
 
@@ -272,3 +257,46 @@ def accountcancellation(request):
         user.save()
         return render(request, 'login.html')
     return render(request, 'accountcancellation.html', {'user_profile': user_profile})
+
+
+@login_required
+def faceprofile(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    if request.method == 'POST':
+        button = request.POST.get('btn-state', None)
+        email = request.user.email
+        if button == 'email':
+            state = send_email(email)
+            return render(request, 'faceprofile.html', {'user_profile': user_profile})
+        else:
+            if ConfirmString.objects.filter(email=email):
+                confirmcode = ConfirmString.objects.get(email=email).__dict__['code']
+                code = request.POST.get('code', None)
+                if confirmcode == code:
+                    ConfirmString.objects.filter(email=email).delete()
+                    photo = request.POST.get('hidden_photo', None)
+                    if photo is not None and photo != '':
+                        index = photo.find('base64,')
+                        base64Str = photo[index + 6:]
+                        unknown_face = base64.b64decode(base64Str)
+                        user = User.objects.get(username=request.user)
+                        path = 'media/face/' + str(user.username) + '_temp.png'
+                        file = open(path, 'wb')
+                        file.write(unknown_face)
+                        file.close()
+                        unknown_face = face_recognition.load_image_file(path)
+                        try:
+                            unknown_face_encoding = face_recognition.face_encodings(unknown_face)[0]
+                            user_image_path = 'face/' + str(user.username) + '.png'
+                            os.replace(path, 'media/' + user_image_path)
+                            user.image = user_image_path
+                            user.save()
+                            return render(request, 'faceprofile.html',
+                                          {'user_profile': user_profile, 'message': '修改成功'})
+                        except IndexError:
+                            os.remove(path)
+                            return render(request, 'faceprofile.html',
+                                          {'user_profile': user_profile, 'message': 'no face detected'})
+                else:
+                    return render(request, 'passwordchange.html', {'user_profile': user_profile, 'message': '验证码错误'})
+    return render(request, 'faceprofile.html', {'user_profile': user_profile})
