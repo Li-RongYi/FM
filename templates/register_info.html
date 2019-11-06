@@ -78,6 +78,10 @@
                   {{ register_form.gender.label_tag }}
                   {{ register_form.gender }}
               </div>
+                   <div class="form-group">
+                       <img align="center" src="../media/profile/default.jpg" height="200px"
+                            width="200px" alt="Image preview area..." id="image">
+                   </div>
                <div class="form-group">
                   {{ register_form.avatar.label_tag }}
                   {{ register_form.avatar }}
@@ -105,6 +109,20 @@
         <script src="../static/bootstrap/js/bootstrap.min.js"></script>
         <script src="../static/js/jquery.backstretch.min.js"></script>
         <script src="../static/js/scripts.js"></script>
+                            <script>
+                                var fileInput = document.getElementById("id_avatar"),
+                                    previewImg = document.getElementById("image");
+                                fileInput.addEventListener('change', function () {
+                                    var file = this.files[0];
+                                    var reader = new FileReader();
+                                    // 监听reader对象的的onload事件，当图片加载完成时，把base64编码賦值给预览图片
+                                    reader.addEventListener("load", function () {
+                                        previewImg.src = reader.result;
+                                    }, false);
+                                    // 调用reader.readAsDataURL()方法，把图片转成base64
+                                    reader.readAsDataURL(file);
+                                }, false);
+                            </script>
 
     </body>
 

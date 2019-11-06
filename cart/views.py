@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from user.models import UserProfile
-from goods.models import Goods,Comment
+from goods.models import Goods, Comment
 from order.models import Order
 from goods.forms import CommentForm
 from .models import Cart
+from index.models import Category
 
 
 # Create your views here.
@@ -13,12 +14,15 @@ def cart(request):
     if request.method == 'POST':
         content = request.POST.get('search', '')
         user_profile = UserProfile.objects.get(user=request.user)
+        categories = Category.objects.all()
         carts = Cart.objects.filter(user=user_profile, goods__name__icontains=content).reverse()
-        return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts, 'message': content})
+        return render(request, 'cart.html',
+                      {'user_profile': user_profile, 'carts': carts, 'message': content, 'categories': categories})
     else:
         user_profile = UserProfile.objects.get(user=request.user)
+        categories = Category.objects.all()
         carts = Cart.objects.filter(user=user_profile).reverse()
-        return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts})
+        return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts, 'categories': categories})
 
 
 @login_required
@@ -35,10 +39,12 @@ def add_cart(request, goods_id):
         cart.save()
 
         user_profile = UserProfile.objects.get(user=request.user)
+        categories = Category.objects.all()
         comment_form = CommentForm()
         goods = Goods.objects.get(pk=goods_id)
         comment_list = Comment.objects.filter(goods=goods).order_by('comment_time').reverse()
-        context_dic = {'goods': goods, 'comments': comment_list, 'form': comment_form, 'user_profile': user_profile}
+        context_dic = {'goods': goods, 'comments': comment_list, 'form': comment_form, 'user_profile': user_profile,
+                       'categories': categories}
         return render(request, 'goods.html', context_dic)
 
 
@@ -46,8 +52,9 @@ def add_cart(request, goods_id):
 def clear_cart(request):
     if request.method == 'POST':
         user_profile = UserProfile.objects.get(user=request.user)
+        categories = Category.objects.all()
         Cart.objects.filter(user=user_profile).delete()
-        return render(request, 'cart.html', {'user_profile': user_profile})
+        return render(request, 'cart.html', {'user_profile': user_profile, 'categories': categories})
 
 
 @login_required
@@ -56,12 +63,16 @@ def delete_cart(request, cart_id):
         if cart_id is not None:
             Cart.objects.filter(id=cart_id).delete()
         user_profile = UserProfile.objects.get(user=request.user)
+        categories = Category.objects.all()
         carts = Cart.objects.filter(user=user_profile)
-        return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts})
+        return render(request, 'cart.html', {'user_profile': user_profile, 'carts': carts, 'categories': categories
+                                             })
+
 
 @login_required
 def checkout(request, cart_id):
     user_profile = UserProfile.objects.get(user=request.user)
+    categories = Category.objects.all()
     cart = Cart.objects.get(id=cart_id)
     if request.method == 'POST':
         order = Order.objects.create()
@@ -76,5 +87,7 @@ def checkout(request, cart_id):
         order.save()
         Cart.objects.filter(id=cart_id).delete()
         orders = Order.objects.filter(buyer=user_profile, status=False)
-        return render(request, 'myorder.html', {'user_profile': user_profile, 'orders': orders})
-    return render(request, 'checkout.html', {'user_profile': user_profile, 'cart': cart})
+        return render(request, 'myorder.html', {'user_profile': user_profile, 'orders': orders, 'categories': categories
+                                                })
+    return render(request, 'checkout.html', {'user_profile': user_profile, 'cart': cart, 'categories': categories
+                                             })

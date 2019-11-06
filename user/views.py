@@ -211,6 +211,7 @@ def profilechange(request):
             if 'avatar' in request.FILES:
                 user_profile.__dict__.update(**form.cleaned_data)
                 user_profile.avatar = request.FILES['avatar']
+                print(user_profile.avatar, request.FILES['avatar'])
             else:
                 avatar_path = user_profile.avatar
                 user_profile.__dict__.update(**form.cleaned_data)

@@ -10,16 +10,25 @@ from .models import Category
 @login_required
 def index(request):
     if request.method == 'POST':
+        print(request.POST)
         content = request.POST.get('search', '')
+        option = request.POST.get('option', None)
         user_profile = UserProfile.objects.get(user=request.user)
-        goods_list = Goods.objects.filter(
-            Q(name__icontains=content) | Q(trade_location__icontains=content)).order_by('-publish_time')
-        context_dic = {'user_profile': user_profile, 'goods': goods_list, 'message': content}
+        categories = Category.objects.all()
+        if option is None or option == 'all':
+            goods_list = Goods.objects.filter(
+                Q(name__icontains=content) | Q(trade_location__icontains=content)).order_by('-publish_time')
+        else:
+            goods_list = Goods.objects.filter(Q(category__name=option) & Q(name__icontains=content)).order_by(
+                '-publish_time')
+            content = option + '+' + content
+        context_dic = {'user_profile': user_profile, 'goods': goods_list, 'message': content, 'categories': categories}
         return render(request, 'index.html', context_dic)
     else:
         user_profile = UserProfile.objects.get(user=request.user)
         goods_list = Goods.objects.all().order_by('-publish_time')
-        context_dic = {'user_profile': user_profile, 'goods': goods_list}
+        categories = Category.objects.all()
+        context_dic = {'user_profile': user_profile, 'goods': goods_list, 'categories': categories}
         return render(request, 'index.html', context_dic)
 
 
@@ -28,7 +37,9 @@ def index_category(request, category_id):
     user_profile = UserProfile.objects.get(user=request.user)
     category = Category.objects.get(id=category_id)
     goods_list = Goods.objects.filter(category=category).order_by('-publish_time')
-    context_dic = {'user_profile': user_profile, 'goods': goods_list, 'message': category.name}
+    categories = Category.objects.all()
+    context_dic = {'user_profile': user_profile, 'goods': goods_list, 'message': category.name,
+                   'categories': categories}
     return render(request, 'index.html', context_dic)
 
 

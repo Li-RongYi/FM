@@ -32,14 +32,25 @@
                     <li><a href="{% url 'publish_goods' %}">Publish goods</a></li>
 				</ul>
 			</nav>
-			<div class="header_content ml-auto">
-				<div class="search header_search">
-					<form action="{% url 'index' %}" method="post">
+            <div class="header_content  ml-auto">
+                <form action="{% url 'index' %}" method="post" class="form-inline">
+                    {% if categories %}
+                        <div>
+                            <select name="option" class="form-control">
+                                <option value="all">all</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.name }}">{{ category }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+                    <div class="search header_search">
                         {% csrf_token %}
 						<input type="search" class="search_input" required="required" id="search" name="search">
 						<button type="submit" id="search_button" class="search_button"><img src="../static/images/magnifying-glass.svg" alt=""></button>
-					</form>
-				</div>
+                    </div>
+                </form>
+            </div>
 				<div class="shopping">
 					<!-- Cart -->
 					<a href="{% url 'cart' %}">
