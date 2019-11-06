@@ -44,7 +44,9 @@
 						<div class="cart_bar_title_name">Product</div>
 						<div class="cart_bar_title_content ml-auto">
 							<div class="cart_bar_title_content_inner d-flex flex-row align-items-center justify-content-end">
-								<div class="cart_bar_title_price">Buyer</div>
+                                <div class="cart_bar_title_buyer">Buyer</div>
+                                <div class="cart_bar_title_contact">Contact</div>
+                                <div class="cart_bar_title_message">Message</div>
 								<div class="cart_bar_title_quantity">Quantity</div>
 								<div class="cart_bar_title_total">Total</div>
 								<div class="cart_bar_title_button"></div>
@@ -68,8 +70,12 @@
 								<div class="cart_product_name"><a href="{% url 'goods' order.goods.id %}">{{ order.goods.name }}</a></div>
 								<div class="cart_product_info  ml-auto">
 									<div class="cart_product_info_inner d-flex flex-row align-items-center justify-content-md-end justify-content-start">
-										<!-- Product Price -->
-										<div class="cart_product_price">{{ order.buyer.nickname }}</div>
+                                        <!-- Product Buyer -->
+                                        <div class="cart_product_nickname">{{ order.buyer.nickname }}</div>
+                                        <!-- Product Contact -->
+                                        <div class="cart_product_contact">{{ order.buyer.contact }}</div>
+                                        <!-- Product Message -->
+                                        <div class="cart_product_message">{{ order.buyer.message }}</div>
 										<!-- Product Quantity -->
 										<div class="product_quantity_container">
 											<div class="product_quantity clearfix">

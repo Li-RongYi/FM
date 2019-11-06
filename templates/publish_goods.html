@@ -1,14 +1,14 @@
 {% extends 'base_goods.html' %}
 {% block content %}
-  <body>
  <div class="col-md-8 col-md-offset-2  main">
             <form id="goods_form" method="post" action="{% url 'publish_goods' %}" enctype="multipart/form-data">{% csrf_token %}
     <div style="float: right">
         <img class="release-icon-main" src="../static/images/release-icon.png">
         <img class="wave-fluid" src="../static/images/black-wave.png">
         <img class="release-title" src="../static/images/release-title.png">
+        <div><img align="center" src="" height="200px" width="200px" alt="Image preview area..." id="image"></div>
         <div class="upload-wr">
-            <div >
+            <div>
                 <div align="center" class="btn btn-lg btn-info">{{ form.picture }} </div>
             </div>
         </div>
@@ -107,9 +107,23 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script>
+        var fileInput = document.getElementById("id_picture"),
+            previewImg = document.getElementById("image");
+        fileInput.addEventListener('change', function () {
+            var file = this.files[0];
+            var reader = new FileReader();
+            // 监听reader对象的的onload事件，当图片加载完成时，把base64编码賦值给预览图片
+            reader.addEventListener("load", function () {
+                previewImg.src = reader.result;
+            }, false);
+            // 调用reader.readAsDataURL()方法，把图片转成base64
+            reader.readAsDataURL(file);
+        }, false);
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
+
 {% endblock %}

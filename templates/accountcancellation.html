@@ -1,17 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 <body>
-
  <div class="col-md-8 col-md-offset-2 main" >
     <form action="{% url 'accountcancellation' %}" method="POST">
         {% csrf_token %}
-
     <div style="float: right">
+        {% if message %}
+            <div class="alert alert-warning">{{ message }}</div>
+        {% endif %}
+        <input type="password" name="password" placeholder="密码..." class="form-control" id="password">
         用户一旦注销，便无法登录，确定注销？<input type="checkbox" id="check" ></br>
         <button type="submit" disabled=true id="btn" class="btn" >确认</button>
 
-
     </div>
+ </div>
 
     </form>
 

@@ -6,7 +6,10 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^', include('user.urls')),
-    url(r'^', include('goods.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  url(r'^admin/', admin.site.urls),
+                  url(r'^', include('user.urls')),
+                  url(r'^', include('goods.urls')),
+                  url(r'^', include('cart.urls')),
+                  url(r'^', include('order.urls')),
+                  url(r'^', include('index.urls')),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

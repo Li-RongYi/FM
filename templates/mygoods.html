@@ -78,14 +78,12 @@
 								<div class="cart_product_info  ml-auto">
 									<div class="cart_product_info_inner d-flex flex-row align-items-center justify-content-md-end justify-content-start">
 										<!-- Product Description -->
-										<div class="cart_product_price">{{ good.description }}</div>
+                                        <div class="cart_product_description">{{ good.description }}</div>
 										<!-- Product Price -->
 										<div class="cart_product_price">￥{{ good.price }}</div>
 										<!-- Product Quantity -->
 										<div class="product_quantity_container">
-											<div class="product_quantity clearfix">
-												<input id="quantity_input" type="text" pattern="[1-9][0-9]*" value={{ good.quantity }} readonly=true>
-											</div>
+                                            {{ good.quantity }}
 										</div>
 										<!-- Products Total Price -->
 								<!--		<div class="cart_product_total">￥</div>   -->

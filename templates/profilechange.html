@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-<body>
 
  <div class="col-md-8 col-md-offset-2 main" >
                 <div style="float: right">
@@ -22,11 +21,12 @@
                   {{ profile_form.contact.label_tag }}
                   {{ profile_form.contact }}
               </div>
+                        <div class="form-group"><img align="center" src="{{ user_profile.avatar.url }}" height="200px"
+                                                     width="200px" alt="Image preview area..." id="image"></div>
                <div class="form-group">
                   {{ profile_form.avatar.label_tag }}
                    {{ profile_form.avatar }}
               </div>
-
 
 
               <button type="submit" class="btn">确认</button>
@@ -35,5 +35,19 @@
           </form>
            </div>
  </div>
-</body>
+
+    <script>
+        var fileInput = document.getElementById("id_avatar"),
+            previewImg = document.getElementById("image");
+        fileInput.addEventListener('change', function () {
+            var file = this.files[0];
+            var reader = new FileReader();
+            // 监听reader对象的的onload事件，当图片加载完成时，把base64编码賦值给预览图片
+            reader.addEventListener("load", function () {
+                previewImg.src = reader.result;
+            }, false);
+            // 调用reader.readAsDataURL()方法，把图片转成base64
+            reader.readAsDataURL(file);
+        }, false);
+    </script>
 {% endblock %}

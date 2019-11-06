@@ -41,8 +41,7 @@
 				<div class="col">
 					<div class="current_page">
 						<ul>
-							<li><a href="categories.html">{{ goods.category }}</a></li>
-							<li><a href="categories.html">{{ goods.name }}</a></li>
+                            <li><a href={% url 'index_category' goods.category.id %}>/{{ goods.category }}</a></li>
 						</ul>
 					</div>
 				</div>
@@ -107,12 +106,10 @@
 								</div>
 							</div>
 						</div>
-                        {% if goods.seller.id == user_profile.id %}
-                            <button type="submit" class="review_form_button" disabled="true">add to cart</button>
-                        {% else %}
-                           <button type="submit" class="review_form_button">add to cart</button>
-                         {% endif %}
+                           <button type="submit" hidden="true" id="btn-submit"></button>
+                           <button type="button" class="review_form_button" id="btn-add">add to cart</button>
                      </form>
+
 					</div>
 				</div>
 			</div>
@@ -182,6 +179,18 @@
 <script src="../static/plugins/easing/easing.js"></script>
 <script src="../static/plugins/parallax-js-master/parallax.min.js"></script>
 <script src="../static/js/product_custom.js"></script>
+    <script>
+        document.getElementById("btn-add").onclick = function () {
+            {% if goods.seller.id != user_profile.id %}
+                if (confirm("确认购买" + "{{ goods.name }}" + ",数量为" + document.getElementById("quantity_input").value)) {
+                    document.getElementById("btn-submit").click();
+                    alert("购物车添加成功");
+                }
+            {% else %}
+                alert("这是你的商品");
+            {% endif %}
+        }
+    </script>
 
 
 {% endblock %}

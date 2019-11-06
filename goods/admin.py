@@ -4,8 +4,5 @@ from . import models
 # Register your models here.
 
 admin.site.register(models.Goods)
-admin.site.register(models.Category)
 admin.site.register(models.Comment)
 admin.site.register(models.InstationMessage)
-admin.site.register(models.Cart)
-admin.site.register(models.Order)

@@ -252,7 +252,12 @@ def passwordchange(request):
 def accountcancellation(request):
     user_profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
+        password = request.POST.get('password', None)
         user = User.objects.get(username=request.user)
+        status = user.check_password(password)
+        print(password, status)
+        if not status:
+            return render(request, 'accountcancellation.html', {'user_profile': user_profile, 'message': "密码错误"})
         user.is_active = False
         user.save()
         return render(request, 'login.html')
