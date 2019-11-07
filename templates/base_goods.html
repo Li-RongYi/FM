@@ -28,8 +28,8 @@
 				<ul>
 					<li><a href={% url 'index' %}>Home</a></li>
 					<li><a href="{% url 'mygoods' %}">My Goods</a></li>
-                    <li><a href="{% url 'mysale' %}">My Sale</a></li>
-                    <li><a href="{% url 'publish_goods' %}">Publish goods</a></li>
+                    <li><a href="{% url 'mysale' %}">Sale</a></li>
+                    <li><a href="{% url 'publish_goods' %}">Publish</a></li>
 				</ul>
 			</nav>
             <div class="header_content  ml-auto">
@@ -51,11 +51,11 @@
                     </div>
                 </form>
             </div>
-				<div class="shopping">
+            <div class="shopping">
 					<!-- Cart -->
 					<a href="{% url 'cart' %}">
 						<div class="cart">
-							<img src="../static/images/shopping-bag.svg" alt="Cart">
+                            <img src="../static/images/cart.svg" alt="Cart" height="25px" width="25px">
 							<div class="cart_num_container">
 								<div class="cart_num_inner">
 									<div class="cart_num">1</div>
@@ -66,7 +66,7 @@
 					<!-- Star -->
 					<a href="{% url 'myorder' %}">
 						<div class="star">
-							<img src="../static/images/star.svg" alt="Star">
+                            <img src="../static/images/order.svg" alt="Order" height="25px" width="25px">
 							<div class="star_num_container">
 								<div class="star_num_inner">
 									<div class="star_num">0</div>
@@ -77,20 +77,21 @@
 					<!-- Avatar -->
 					<a href="{% url 'mygoods' %}">
 						<div class="avatar">
-							<img src="../static/images/avatar.svg" alt="Avatar">
+                            <img src="../static/images/shopping-bag.svg" alt="Goods">
 						</div>
 					</a>
 
-         <!--           <a href="{% url 'mygoods' %}">
+                {% if  user_profile.user.is_staff %}
+                    <a href="{% url 'check_goods' %}">
 						<div class="avatar">
-							<img src="../static/images/email.svg" alt="email">
+                            <img src="../static/images/check.svg" alt="Che'c">
 						</div>
-					</a> -->
-				</div>
+                    </a>
+                {% endif %}
+            </div>
 			</div>
 
 			<div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
-		</div>
 	</header>
 	<!-- Menu -->
 

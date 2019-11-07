@@ -15,4 +15,7 @@ urlpatterns = [
 
     url(r'^mysale', views.mysale, name='mysale'),
     url(r'^completesale', views.completesale, name='completesale'),
+
+    url(r'^check_goods', views.check_goods, name='check_goods'),
+    url(r'^check/(?P<goods_id>[\w\-]+)', views.check, name='check'),
 ]

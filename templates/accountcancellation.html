@@ -31,8 +31,15 @@
             }
         };
     </script>
+ <script>
+     document.getElementById("btn").onclick = function () {
+         if (document.getElementById("password").value == "") {
+             alert("password empty!!");
+             return false;
+         }
+     };
+ </script>
 
- </div>
 
   </body>
 {% endblock %}

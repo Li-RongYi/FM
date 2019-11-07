@@ -170,7 +170,7 @@ def login_face(request):
             base64Str = photo[index + 6:]
             unknown_face = base64.b64decode(base64Str)
             index = len(os.listdir('media/login'))
-            path = 'media/login/'+str(index)+'.png'
+            path = 'media/login/' + str(index) + '.png'
             file = open(path, 'wb')
             file.write(unknown_face)
             file.close()
@@ -194,6 +194,39 @@ def login_face(request):
     return render(request, 'login_face.html')
 
 
+def forgetpassword(request):
+    if request.method == "POST":
+        email = request.POST.get('email', None)
+        button = request.POST.get('btn-state', None)
+        if len(User.objects.filter(email=email)) == 0:
+            return render(request, 'forgetpassword.html', {'email': email, 'message': '邮箱未注册'})
+        if button == 'email':
+            state = send_email(email)
+            if state:
+                return render(request, 'forgetpassword.html', {'email': email, 'message': '请前往邮箱获取验证码'})
+            else:
+                return render(request, 'forgetpassword.html', {'email': email, 'message': '邮箱错误'})
+        else:
+            if ConfirmString.objects.filter(email=email):
+                confirmcode = ConfirmString.objects.get(email=email).__dict__['code']
+                code = request.POST.get('code', None)
+                if confirmcode == code:
+                    ConfirmString.objects.filter(email=email).delete()
+                    return render(request, 'forgetpassword2.html',
+                                  {'email': email})
+    return render(request, 'forgetpassword.html')
+
+
+def forgetpassword2(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', None)
+        password = request.POST.get('password1', None)
+        user = User.objects.get(email=email)
+        user.set_password(password)
+        user.save()
+        return render(request, 'login.html', {'message': '修改成功'})
+
+
 @login_required
 def user_logout(request):
     logout(request)
@@ -204,7 +237,7 @@ def user_logout(request):
 def profilechange(request):
     user_profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
-        print(request.POST,request.FILES)
+        print(request.POST, request.FILES)
         form = ProfileForm(request.POST)
         if form.is_valid():
             user = User.objects.get(username=request.user)

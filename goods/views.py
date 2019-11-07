@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Goods, Comment, InstationMessage
 from user.models import UserProfile
@@ -110,6 +110,7 @@ def edit_goods(request, goods_id):
                 picture = goods.picture
                 goods.__dict__.update(**goods_form.cleaned_data)
                 goods.picture = picture
+            goods.checked = False
             goods.save()
             goods = Goods.objects.filter(seller=user_profile).reverse()
             return render(request, 'mygoods.html',
@@ -147,3 +148,35 @@ def completesale(request):
     orders = Order.objects.filter(seller=user_profile, status=True).reverse()
     return render(request, 'completesale.html',
                   {'user_profile': user_profile, 'orders': orders, 'categories': categories})
+
+
+@login_required
+def check_goods(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    if user_profile.user.is_staff:
+        categories = Category.objects.all()
+        if request.method == 'POST':
+            content = request.POST.get('search', '')
+            goods = Goods.objects.filter(checked=False, name__icontains=content).order_by('-publish_time')
+            return render(request, 'check_goods.html',
+                          {'user_profile': user_profile, 'goods': goods, 'categories': categories})
+        else:
+            goods = Goods.objects.filter(checked=False).order_by('-publish_time')
+
+            return render(request, 'check_goods.html',
+                          {'user_profile': user_profile, 'goods': goods, 'categories': categories})
+    else:
+        return HttpResponse("抱歉，无权访问")
+
+
+@login_required
+def check(request, goods_id):
+    user_profile = UserProfile.objects.get(user=request.user)
+    if user_profile.user.is_staff:
+        checked_goods = Goods.objects.filter(id=goods_id).update(checked=True)
+        goods = Goods.objects.filter(checked=False).order_by('-publish_time')
+        categories = Category.objects.all()
+        return render(request, 'check_goods.html',
+                      {'user_profile': user_profile, 'goods': goods, 'categories': categories})
+    else:
+        return HttpResponse("抱歉，无权访问")

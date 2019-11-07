@@ -16,17 +16,18 @@ def index(request):
         user_profile = UserProfile.objects.get(user=request.user)
         categories = Category.objects.all()
         if option is None or option == 'all':
-            goods_list = Goods.objects.filter(
-                Q(name__icontains=content) | Q(trade_location__icontains=content)).order_by('-publish_time')
+            goods_list = Goods.objects.filter(Q(checked=True),
+                                              Q(name__icontains=content) | Q(trade_location__icontains=content)).order_by('-publish_time')
         else:
-            goods_list = Goods.objects.filter(Q(category__name=option) & Q(name__icontains=content)).order_by(
+            goods_list = Goods.objects.filter(Q(checked=True),
+                                              Q(category__name=option) & Q(name__icontains=content)).order_by(
                 '-publish_time')
             content = option + '+' + content
         context_dic = {'user_profile': user_profile, 'goods': goods_list, 'message': content, 'categories': categories}
         return render(request, 'index.html', context_dic)
     else:
         user_profile = UserProfile.objects.get(user=request.user)
-        goods_list = Goods.objects.all().order_by('-publish_time')
+        goods_list = Goods.objects.filter(checked=True).order_by('-publish_time')
         categories = Category.objects.all()
         context_dic = {'user_profile': user_profile, 'goods': goods_list, 'categories': categories}
         return render(request, 'index.html', context_dic)

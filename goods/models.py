@@ -17,6 +17,7 @@ class Goods(models.Model):
     seller = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE)
     contact = models.CharField(max_length=20, null=True)
     publish_time = models.DateField(auto_now_add=True, null=True, blank=True)
+    checked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
